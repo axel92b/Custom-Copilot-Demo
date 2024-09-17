@@ -44,5 +44,8 @@
 		<None Update="Memories\DumpifyDocs.md">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<None Update="Memories\TestData.txt">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 </Project>

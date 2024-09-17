@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Azure;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.KernelMemory;
@@ -11,16 +12,14 @@ namespace Demo;
 #pragma warning disable SKEXP0050
 #pragma warning disable SKEXP0011
 
-public class Memory00Load02 : BaseDemo
+public class MemoryKernel : KernelBase
 {
     private readonly ChatHistory _chatHistory = [];
 
     public override Kernel CreateKernel(SKConfig config)
     {
         var builder = Kernel.CreateBuilder()
-            .AddAzureOpenAIChatCompletion(config.AzureOpenAICompletionDeploymentName, config.AzureOpenAIEndpoint, config.AzureOpenAIKey)
-            // .AddOpenAIChatCompletion(config.OpenAICompletionModelId, config.OpenAIKey)
-            ;
+            .AddAzureOpenAIChatCompletion(config.AzureOpenAICompletionDeploymentName, config.AzureOpenAIEndpoint, config.AzureOpenAIKey);
 
         builder.Plugins.AddFromType<TimePlugin>();
         builder.Plugins.AddFromType<DynamicMemoryLoaderPlugin>();
@@ -33,11 +32,12 @@ public class Memory00Load02 : BaseDemo
     public override async Task<IKernelMemory?> CreateMemoryAsync(SKConfig config)
     {
         var memory = new KernelMemoryBuilder()
+            .WithAzureAISearchMemoryDb(config.AzureSearchEndpoint, config.AzureSearchKey)
             .WithAzureOpenAITextGeneration(new AzureOpenAIConfig { APIKey = config.AzureOpenAIKey, Endpoint = config.AzureOpenAIEndpoint, Deployment = config.AzureOpenAICompletionDeploymentName, Auth = AzureOpenAIConfig.AuthTypes.APIKey })
             .WithAzureOpenAITextEmbeddingGeneration(new AzureOpenAIConfig { APIKey = config.AzureOpenAIKey, Endpoint = config.AzureOpenAIEndpoint, Deployment = config.AzureOpenAIEmbeddingDeploymentName, Auth = AzureOpenAIConfig.AuthTypes.APIKey })
             .Build();
 
-        var docLocation = Path.Combine(Directory.GetCurrentDirectory(), "SK.Copilot.Demo/Memories");
+        var docLocation = Path.Combine(Directory.GetCurrentDirectory(), "Memories");
         var tasks = Directory
             .GetFiles(docLocation)
             .Select(f => new FileInfo(f))
@@ -49,14 +49,14 @@ public class Memory00Load02 : BaseDemo
         return memory;
     }
 
-    public override Task<KernelPlugin[]> CreatePluginsAsync(Kernel kernel)
-    {
-        KernelPlugin[] plugins = [
-            kernel.CreatePluginFromPromptDirectory("SK.Copilot.Demo/Prompts"),
-        ];
-
-        return Task.FromResult(plugins);
-    }
+    // public override Task<KernelPlugin[]> CreatePluginsAsync(Kernel kernel)
+    // {
+    //     KernelPlugin[] plugins = [
+    //         kernel.CreatePluginFromPromptDirectory("Prompts"),
+    //     ];
+    //
+    //     return Task.FromResult(plugins);
+    // }
 
     public override string ScreenPrompt => "What do you want to know about time?";
 

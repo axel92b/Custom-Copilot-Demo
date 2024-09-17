@@ -2,17 +2,16 @@
 
 var config = new SKConfig
 {
-    // AzureOpenAICompletionDeploymentName = "gpt-35-turbo-16k",
-    AzureOpenAICompletionDeploymentName = "gpt-4-0125-Preview",
+    AzureOpenAICompletionDeploymentName = "gpt-4o",
     AzureOpenAIEmbeddingDeploymentName = "text-embedding-ada-002",
-    AzureOpenAIKey = Environment.GetEnvironmentVariable("demo_aoi_key")!,
-    AzureOpenAIEndpoint = Environment.GetEnvironmentVariable("demo_aoi_endpoint")!,
+    AzureOpenAIKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_APIKEY")!,
+    AzureOpenAIEndpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")!,
 
-    OpenAIKey = Environment.GetEnvironmentVariable("demo_oi_key")!,
-    OpenAICompletionModelId = "gpt-4-turbo-preview",
+    AzureSearchEndpoint = Environment.GetEnvironmentVariable("AZURE_SEARCH_SERVICE_ENDPOINT")!,
+    AzureSearchKey = Environment.GetEnvironmentVariable("AZURE_SEARCH_SERVICE_APIKEY")!
 };
 
-await using var demo = DemoUtils.GetDemo(args[0]);
+await using var memoryKernel = new MemoryKernel();
 
-await demo.InitializeAsync(config);
-await demo.RunAsync(config);
+await memoryKernel.InitializeAsync(config);
+await memoryKernel.RunAsync(config);

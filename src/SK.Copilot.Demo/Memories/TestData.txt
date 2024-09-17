@@ -1,0 +1,658 @@
+@ms-fabric/workload-client package
+Reference
+Classes
+CssVariableThemeProvider	
+CssVariableThemeProvider loads themes from json. Writes json themes into the dom as css variables. It can return the theme object to consumers
+
+Interfaces
+AcquireAccessTokenParams
+ActionAPI	
+An interface representing action related APIs
+
+ActionButton	
+An interface representing an action button
+
+AfterNavigateAwayData	
+An interface representing the data that is passed to the afterNavigateAway hook
+
+AuthClientAPI
+BaseDatahubItemUI	
+An interface representing datahub item ui metadata
+
+BeforeNavigateAwayData	
+An interface representing the data that is passed to the beforeNavigateAway hook
+
+BeforeNavigateAwayResult	
+An interface representing the result that is returned by the beforeNavigateAway hook
+
+CancelItemJobResult
+CheckItemSharingEnabledInput	
+An interface representing input of API: checkItemSharingEnabled
+
+CheckItemSharingEnabledResult	
+An interface representing result of API: checkItemSharingEnabled
+
+CheckPermissionsOfItemInput	
+An interface representing the input of API: checkPermissionsOfItem
+
+CheckPermissionsOfItemResult	
+An interface representing the result of API: checkPermissionsOfItem
+
+CheckPermissionsOfWorkspaceInput	
+An interface representing the input of API: checkPermissionsOfWorkspace
+
+CheckPermissionsOfWorkspaceResult	
+An interface representing the result of API: checkPermissionsOfWorkspace
+
+CloseUIConfig	
+An interface representing the configuration settings required to close an workload UI
+
+CloseUIResult	
+An interface representing the result of closing an workload UI
+
+CorePermission	
+An interface representing name and value pair of core permissions
+
+CreateItemParams
+CreateItemPayload
+CreateItemScheduleParams	
+An interface representing the parameters for creating an item schedule
+
+DatahubAPI	
+An interface representing datahub related APIs
+
+DatahubButton	
+An interface representing an action button in the datahub
+
+DatahubCompactViewConfig	
+An interface representing a configuration of the Datahub Compact View
+
+DatahubCompactViewPageConfig	
+An interface representing the configuration of the datahub compact view page
+
+DatahubConfigurableStrings
+DatahubFilter	
+An interface representing the datahub filter
+
+DatahubHeaderDialogConfig	
+An interface representing the datahub header dialog config
+
+DatahubPivotDetails
+DatahubSelectorDialogConfig	
+An interface representing the datahub selector dialog config
+
+DatahubSelectorDialogResult	
+An interface representing the datahub selector dialog result
+
+DatahubWizardDialogConfig	
+An interface representing the configuration of the datahub wizard dialog
+
+DatahubWizardDialogResult	
+An interface representing the Datahub wizard dialog result
+
+DatasourceReference	
+An interface representing the datasource reference
+
+DeleteItemParams	
+An interface representing the parameters for deleting an item
+
+DeleteItemResult
+DialogAPI	
+An interface representing dialog related APIs
+
+DialogUIOptions	
+An interface representing configurable options available for an workload dialog
+
+EndpointAPI
+ErrorDetail	
+The interface representing label-value styled error detail
+
+ErrorDialogButton	
+An interface representing an error dialog button
+
+ErrorDialogConfig	
+Configurations for host's open error dialog service.
+
+ErrorHandlingAPI	
+An interface representing error handling related APIs
+
+ErrorOptions	
+Configurations used to render the error dialog.
+
+ErrorResult	
+The interface representing a general error result
+
+EventAPI	
+An interface representing event related APIs
+
+EventDetails	
+An interface that defines the details of the emitted event.
+
+FailureResponse	
+The interface representing a failure response
+
+FavoriteAPI	
+An interface representing favorite related APIs
+
+FavoriteItemInput	
+Interface for favorite item input, extending the base input interface.
+
+FavoriteItemInputBase	
+Base interface for favorite item input, containing the object ID of the item.
+
+FavoriteItemOutput	
+Interface representing the output of a favorite item action.
+
+FavoriteStateChange	
+Interface representing a change in an item's favorite state.
+
+GetItemFavoriteStateInput	
+Interface for getting the favorite state of an item, extending the base input interface.
+
+GetItemFavoriteStateOutput	
+Interface representing the output of getting an item's favorite state.
+
+GetItemJobHistoryParams	
+An interface representing the parameters for getting job history of one item
+
+GetItemParams	
+An interface representing the parameters for getting an item
+
+GetItemTypeShareablePermissionsInput	
+An interface representing input of API: getItemTypeShareablePermissions
+
+GetItemTypeShareablePermissionsResult	
+An interface representing result of API: getItemTypeShareablePermissions
+
+GetPermissionsOfItemByUserInput	
+An interface representing the input of API: getPermissionsOfItemByUser
+
+GetPermissionsOfItemByUserResult	
+An interface representing the result of API: getPermissionsOfItemByUser
+
+GetPermissionsOfItemInput	
+An interface representing the input of API: getPermissionsOfItem
+
+GetPermissionsOfItemResult	
+An interface representing the result of API: getPermissionsOfItem
+
+GetPermissionsOfWorkspaceInput	
+An interface representing input of API: getPermissionsOfWorkspace
+
+GetPermissionsOfWorkspaceResult	
+An interface representing result of API: getPermissionsOfWorkspace
+
+HandleInvalidRouteConfig	
+Configurations for handling invalid route
+
+HandleRequestFailureResult	
+The interface representing the result of a 'handle request failure' API call
+
+HideNotificationConfig	
+An interface representing the configuration settings required to close a notification
+
+HostDetails	
+An interface representing the details on the datahub consumer host
+
+HoverCardConfiguration
+InitParams	
+An interface representing the parameters that are passed to the workload to initialize the application
+
+InjectedDatahubItemUI	
+An interface representing the injected datahub item ui
+
+ItemBase	
+An interface representing a base item
+
+ItemCreateContext	
+An interface representing the context for creating an item
+
+ItemCrudAPI
+ItemFavoriteStateChange	
+Interface representing changes in the favorite state of multiple items.
+
+ItemIdentifier	
+An interface representing object id(String format) and id(Number format) pair of item
+
+ItemJobActionContext
+ItemJobActionResult
+ItemJobDetailActionMetadataAttrs
+ItemJobDetailData
+ItemJobDetailSection
+ItemJobHistory	
+An interface representing the job history list of single item
+
+ItemJobInstance	
+An interface representing single job instance
+
+ItemRecentRunsAPI	
+An interface representing item recent runs related APIs
+
+ItemRelation	
+An interface representing a relation between Fabric items
+
+ItemSchedule	
+An interface representing the schedule info of item
+
+ItemScheduleAPI
+ItemSettingContext	
+The interface representing the context data required to get item specific settings from workload
+
+ItemSettingsAPI	
+An interface representing item settings related APIs
+
+ItemSharingDialogConfig	
+An interface representing the input configuration to open link sharing dialog or direct sharing dialog
+
+ItemV2	
+An interface representing Fabric item metadata
+
+ItemV2WithETag	
+An interface representing Fabric item metadata
+
+Link	
+An interface representing a link
+
+MessageBarModel	
+An interface representing a message bar
+
+MessageBoxOptions	
+An interface representing configurable options available for a message box
+
+MessageBoxResult	
+An interface representing the result of a message box
+
+NameValuePair
+NavigationAPI	
+An interface representing navigation related APIs
+
+NavigationHostRoute	
+An interface representing a particular host-side route
+
+NavigationResult	
+An interface representing the navigation result
+
+NavigationWorkloadRoute	
+An interface representing a particular workload-side route
+
+NotificationAPI	
+An interface representing notification related APIs
+
+OnCloseItemSettingsContext	
+The interface representing the context data related with item settings panel closing event
+
+OnItemFavoriteStateChangeInput	
+Interface for input to monitor item favorite state changes, extending the base input interface.
+
+OneLakeExplorerPageConfig	
+An interface representing the configuration of the OneLake explorer page
+
+OnelakeExplorerConfig	
+An interface representing the configuration of the OneLake explorer
+
+OnelakeExplorerData	
+An interface representing the Onelake explorer data
+
+OnelakeExplorerItem	
+An interface representing the Onelake explorer item
+
+OnelakeExplorerMultiResult	
+An interface representing the Onelake explorer multi result
+
+OnelakeExplorerResult	
+An interface representing the Onelake explorer result
+
+OpenDialogConfig	
+An interface representing the configuration settings required to open an workload dialog
+
+OpenErrorConfig	
+Configurations for workload's openError API.
+
+OpenItemRecentRunsConfig
+OpenItemSettingsConfig	
+The interface representing the configuration settings required to open item settings panel
+
+OpenMessageBoxConfig	
+An interface representing options available for opening a message box
+
+OpenMessageBoxResult	
+An interface representing the result returned when the message box is closed
+
+OpenNotificationButton	
+An interface representing a button displayed on the notification toast
+
+OpenNotificationConfig
+OpenNotificationResult	
+An interface representing the result of open notification API call
+
+OpenPageConfig	
+An interface representing the configuration settings required to open an workload page
+
+OpenPanelConfig	
+An interface representing the configuration settings required to open an workload panel
+
+OpenSubfolderPickerDialogConfig	
+An interface representing the input configuration of API: openSubfolderPickerDialog
+
+OpenSubfolderPickerDialogResult	
+An interface representing the result of API: openSubfolderPickerDialog
+
+OpenUIConfig	
+An interface representing the configuration settings required to open an workload UI
+
+OpenUIResult	
+An interface representing the result returned when the workload UI is closed
+
+PageAPI	
+An interface representing page related APIs
+
+PanelAPI	
+An interface representing panel related APIs
+
+PanelUIOptions	
+An interface representing configurable options available for an workload panel
+
+PermissionAPI	
+An interface representing permission related APIs
+
+PermissionsOfItemByUser	
+An interface representing single user with permission information
+
+PostDOMEventConfig	
+The interface representing the available configuration options when posting a DOM event
+
+PreSelectedItem	
+An interface representing pre-selected item
+
+ResolveEndpointParams
+ResolveEndpointResult
+RunItemJobParams	
+An interface representing the parameters for running on-demand job
+
+SelectedDatahubItem	
+An interface representing selected datahub item
+
+SelectedItemMetadata	
+An interface contains metadata of selected items
+
+SettingsAPI	
+An interface representing settings related APIs
+
+SharingResult	
+An interface representing the result of API: openItemSharingDialogWithResult
+
+StateAPI	
+An interface representing state management related APIs
+
+SubfolderAPI	
+An interface representing subfolder related APIs
+
+SubfolderPickerResult	
+An interface representing the result that is returned from picker when picker is closed
+
+SubfolderPickerSelectedItems	
+An interface representing selected items when subfolder picker is allowed to select items.
+
+SubscriptionInfo
+SupportedConnection
+ThemeAPI	
+An interface representing theme related APIs
+
+ThemeConfiguration	
+The interface provides options for configuring themes, including CSS tokens and accent colors, among other settings.
+
+ThemeProviderOptions	
+The interface provides configurable options for the theme provider.
+
+TriItemPermission	
+An interface representing customized permissions
+
+TriRelatedSharingPermissions	
+An interface representing the information of related sharing
+
+TypeConfig	
+An interface representing a configuration that apply for a specific supportedType
+
+UnFavoriteItemInput	
+Interface for unfavorite item input, extending the base input interface.
+
+UnFavoriteItemOutput	
+Interface representing the output of an unfavorite item action.
+
+Unsubscribable
+UpdateItemParams	
+An interface representing the parameters for updating an item
+
+WorkbookIdentifier	
+An interface representing identifier of workbook
+
+WorkloadAction	
+The interface representing an action that a particular workload can handle
+
+WorkloadActionHandler
+WorkloadClientAPI
+WorkloadClientConfig	
+An interface representing the configuration settings required to create an instance of the workload client
+
+WorkloadErrorBasicInformation
+WorkloadErrorDetails	
+This interface is used for error propogation from the workload backend to its frontend in control plane APIs.
+
+WorkloadErrorExtendedInformation
+WorkloadNavigation	
+An interface representing the location to which the workload should navigate
+
+WorkloadRoute	
+An interface representing a particular workload-side route, including its path and query parameters
+
+WorkloadSettings	
+An interface representing setting properties that are specific to the current workload iframe, as well as properties that can be shared across multiple workloads
+
+WorkloadSettingsContextAgnostic	
+An interface representing setting properties that are shared across different workloads
+
+Type Aliases
+Action	
+Represents an action that can be handled by a specific workload application or the portal application
+
+ActionName	
+Represents the type of the action name.
+
+ActionResult	
+Represents the result of executing the action
+
+Base64Image	
+Base 64 image type
+
+CancelItemJobParams	
+An interface representing the parameters for cancelling a job
+
+CreateItemResult
+ErrorCategory	
+A union type that includes different categories of errors, such as system errors and user errors
+
+ExtendedItemType	
+A union type of all valid Power BI item types, simulated item types and Fabric first-party item types
+
+ExtendedItemTypeV2	
+A union type of all valid Power BI item types, simulated item types and Fabric item types
+
+FabricItemTypeV2	
+Fabric item type built by first-party or third-party developers
+
+GetItemResult
+HandleRequestFailureWorkloadNextStep	
+The type representing the next step to take after handling a request failure
+
+Possible values: 'refreshAccessToken' - The request failure may relate to an invalid access token. The workload should force a token refresh.
+
+IFrameType	
+The type of workload iframe
+
+ImageType	
+Image type
+
+ItemFavoriteStateChangeHandler	
+Type definition for a handler that reacts to changes in item favorite state.
+
+ItemJobData
+ItemJobOwner
+ItemLikeV2	
+A union type that includes both the full Fabric item metadata and various kinds of partial item metadata, such as Recent and Favorite. These partial metadata types are designed to be used for different rendering purposes without requiring the full item metadata to be fetched.
+
+ItemPermissions
+ItemTypeV2	
+A union type of all valid Power BI item types and Fabric item types
+
+ListItemResult
+LoggableEvent	
+A union type of all valid telemetry events
+
+NotificationButton
+PayloadContentType	
+A type representing a valid payload content type
+
+ProvisionState	
+A type representing a valid provision state
+
+TokenValue	
+The value of an CSS token
+
+Tokens	
+CSS tokens represented in a key-value pair format
+
+UpdateItemResult
+UpdateItemScheduleParams
+WorkloadActionResult	
+The result of executing the workload action
+
+Enums
+ButtonType	
+An enum of all valid button types
+
+CloseMode	
+An enum of all valid modes for closing an workload UI
+
+DatahubFilterType	
+An enum of all valid datahub filter type
+
+DatahubListPivot	
+An enum of all valid datahub list pivot
+
+DialogType	
+An enum of all valid dialog types
+
+DisplayColumn	
+An enum of all valid display clolumn
+
+ErrorDialogWidth	
+An enum of all valid error dialog widths
+
+ErrorKind	
+An enum of all valid error kinds
+
+ErrorSource	
+An enum of all valid error sources
+
+ExposeTo	
+An enum that defines the possible consumers that an event can be exposed to.
+
+GatewayType
+ItemJobStatus	
+An enum of all valid item job status types
+
+ItemRelationSettings	
+An enum of all valid item relation settings
+
+MessageBarType	
+An enum of all valid types of the message bar
+
+NotificationToastDuration	
+An enum of all valid notification toast durations
+
+NotificationType	
+An enum of all valid notification types
+
+OnelakeExplorerType
+OpenMode	
+An enum of all valid modes for opening an workload UI
+
+OpenNotificationButtonType	
+An enum of all valid notification button types
+
+PayloadContentTypeEnum	
+An enum of all valid payload content types
+
+Permissions	
+An enum representing core permissions
+
+ProvisionStateEnum	
+An enum of all valid provision states
+
+SharingLinkType	
+An enum representing the scope of link sharing
+
+SupportedDatahubStyleProperties	
+An enum of all valid supported datahub style proprties
+
+TokenName	
+An enum of all valid CSS token names
+
+TriggerType	
+An enum of all methods to apply a label
+
+WorkloadAuthError
+WorkloadErrorSource	
+The source of the error.
+
+WorkloadHostApp	
+An enum of all valid host application types
+
+Functions
+bootstrap({ initializeUI: (params: InitParams) => Promise<void>, initializeWorker: (params: InitParams) => Promise<void>, workloadHostWindow?: Window })	
+Every workload app needs to support being loaded in two modes:
+
+UI mode: App in UI mode is loaded in visible IFrames and listens for its own route changes to render corresponding UI components, including pages, panels, dialogs, and so on.
+Worker mode: App in worker mode runs in an invisible IFrame, which is mainly used to receive commands sent from the outside world and respond to them.
+The bootstrap() method is to simplify the initialization steps. The bootstrap() method internally detects whether the current App is loaded in UI mode or worker mode, and then call the appropriate initialization method (initializeUI vs. initializeWorker). After the initialization is complete, it notifies Fabric micro-frontend framework of the initialization success or failure.
+
+createWorkloadClient(WorkloadClientConfig)	
+create an workload client instance.
+
+Function Details
+bootstrap({ initializeUI: (params: InitParams) => Promise<void>, initializeWorker: (params: InitParams) => Promise<void>, workloadHostWindow?: Window })
+Every workload app needs to support being loaded in two modes:
+
+UI mode: App in UI mode is loaded in visible IFrames and listens for its own route changes to render corresponding UI components, including pages, panels, dialogs, and so on.
+Worker mode: App in worker mode runs in an invisible IFrame, which is mainly used to receive commands sent from the outside world and respond to them.
+The bootstrap() method is to simplify the initialization steps. The bootstrap() method internally detects whether the current App is loaded in UI mode or worker mode, and then call the appropriate initialization method (initializeUI vs. initializeWorker). After the initialization is complete, it notifies Fabric micro-frontend framework of the initialization success or failure.
+
+TypeScript
+
+Copy
+function bootstrap(config: { initializeUI: (params: InitParams) => Promise<void>, initializeWorker: (params: InitParams) => Promise<void>, workloadHostWindow?: Window }): Promise<void>
+Parameters
+config
+{ initializeUI: (params: InitParams) => Promise<void>, initializeWorker: (params: InitParams) => Promise<void>, workloadHostWindow?: Window }
+
+Returns
+Promise<void>
+
+promise which resolves when the initialization is complete.
+
+createWorkloadClient(WorkloadClientConfig)
+create an workload client instance.
+
+TypeScript
+
+Copy
+function createWorkloadClient(config?: WorkloadClientConfig): WorkloadClientAPI
+Parameters
+config
+WorkloadClientConfig
+configuration of the workload client, optional with default config:
+
+workloadHostWindow – A window object - Reference to the workload host window, usefully when workloads have nested frames and use the workload client library in the inner frame - optional with default value to window.parent!.
+Returns
+WorkloadClientAPI
+the workload client instance

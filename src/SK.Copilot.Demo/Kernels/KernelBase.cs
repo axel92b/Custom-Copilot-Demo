@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Demo;
 
-public abstract class BaseDemo : IDemo
+public abstract class KernelBase : IDemo
 {
     private Kernel? _kernel;
     private Dictionary<string, KernelPlugin> _plugins = [];
@@ -16,7 +16,7 @@ public abstract class BaseDemo : IDemo
     private IKernelMemory? _memory;
     public IKernelMemory KernelMemory => _memory!;
 
-    public BaseDemo()
+    public KernelBase()
     {
         GetType().Name.Dump(colors: new ColorConfig { PropertyValueColor = "Orange" });
     }
