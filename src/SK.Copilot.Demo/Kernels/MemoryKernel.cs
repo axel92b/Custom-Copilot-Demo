@@ -41,8 +41,11 @@ public class MemoryKernel : KernelBase
         var tasks = Directory
             .GetFiles(docLocation)
             .Select(f => new FileInfo(f))
-            .Select(info => (info, text: File.ReadAllText(info.FullName)))
-            .Select(tuple => memory.ImportDocumentAsync(tuple.info.FullName, documentId: tuple.info.Name));
+            .Select(async fileInfo =>
+            {
+                await memory.DeleteDocumentAsync(fileInfo.Name);
+                return await memory.ImportDocumentAsync(fileInfo.FullName, documentId: fileInfo.Name);
+            });
 
         await Task.WhenAll(tasks);
 

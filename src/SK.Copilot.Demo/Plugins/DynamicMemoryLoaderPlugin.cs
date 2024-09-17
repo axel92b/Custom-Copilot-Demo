@@ -18,7 +18,7 @@ public class DynamicMemoryLoaderPlugin
     public async Task<string> LoadDoc([Description("The full query of the user")] string userQuery)
     {
         $"Loading memory according to {userQuery}".Dump();
-        var result = await _kernelMemory.AskAsync(userQuery, minRelevance: 0.7);
+        var result = await _kernelMemory.AskAsync(userQuery, minRelevance: 0.7, index:"default");
         return result.Result;
     }
 }
