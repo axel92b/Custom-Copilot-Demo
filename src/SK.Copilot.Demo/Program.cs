@@ -2,7 +2,8 @@
 
 var config = new SKConfig
 {
-    AzureOpenAICompletionDeploymentName = "gpt-4o",
+    AzureOpenAICompletionDeploymentName = "gpt4o",
+    // AzureOpenAICompletionDeploymentName = "gpt-4o",
     AzureOpenAIEmbeddingDeploymentName = "text-embedding-ada-002",
     AzureOpenAIKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_APIKEY")!,
     AzureOpenAIEndpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")!,

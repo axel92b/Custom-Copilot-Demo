@@ -1,0 +1,2485 @@
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('tslib'), require('uuid'), require('bowser')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'tslib', 'uuid', 'bowser'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.WorkloadClient = {}, global.Tslib, global.UUID, global.Bowser));
+})(this, (function (exports, tslib, uuid, bowser) { 'use strict';
+
+    function _interopNamespaceDefault(e) {
+        var n = Object.create(null);
+        if (e) {
+            Object.keys(e).forEach(function (k) {
+                if (k !== 'default') {
+                    var d = Object.getOwnPropertyDescriptor(e, k);
+                    Object.defineProperty(n, k, d.get ? d : {
+                        enumerable: true,
+                        get: function () { return e[k]; }
+                    });
+                }
+            });
+        }
+        n.default = e;
+        return Object.freeze(n);
+    }
+
+    var uuid__namespace = /*#__PURE__*/_interopNamespaceDefault(uuid);
+    var bowser__namespace = /*#__PURE__*/_interopNamespaceDefault(bowser);
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description An enum representing core permissions
+     */
+    exports.Permissions = void 0;
+    (function (Permissions) {
+        Permissions[Permissions["None"] = 0] = "None";
+        Permissions[Permissions["Read"] = 1] = "Read";
+        Permissions[Permissions["Write"] = 2] = "Write";
+        Permissions[Permissions["ReShare"] = 4] = "ReShare";
+        Permissions[Permissions["Explore"] = 8] = "Explore";
+        Permissions[Permissions["CopyOnWrite"] = 16] = "CopyOnWrite";
+        Permissions[Permissions["WriteCheckRelaxForReadOnlyGroup"] = 32] = "WriteCheckRelaxForReadOnlyGroup";
+        Permissions[Permissions["Execute"] = 64] = "Execute";
+        Permissions[Permissions["ReadExplore"] = 9] = "ReadExplore";
+        Permissions[Permissions["ReadWrite"] = 3] = "ReadWrite";
+        Permissions[Permissions["ReadWriteCheckRelaxForReadOnlyGroup"] = 35] = "ReadWriteCheckRelaxForReadOnlyGroup";
+        Permissions[Permissions["ReadReshare"] = 5] = "ReadReshare";
+        Permissions[Permissions["All"] = 7] = "All";
+    })(exports.Permissions || (exports.Permissions = {}));
+    /**
+     * @description An enum representing the scope of link sharing
+     */
+    exports.SharingLinkType = void 0;
+    (function (SharingLinkType) {
+        SharingLinkType["TenantOnly"] = "TenantOnly";
+        SharingLinkType["SpecificPeople"] = "SpecificPeople";
+        SharingLinkType["ExistingAccess"] = "ExistingAccess";
+    })(exports.SharingLinkType || (exports.SharingLinkType = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    const DefaultWorkloadClientConfig = {
+        workloadHostWindow: window.parent,
+    };
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description An enum of all valid datahub list pivot
+     */
+    exports.DatahubListPivot = void 0;
+    (function (DatahubListPivot) {
+        DatahubListPivot[DatahubListPivot["All"] = 0] = "All";
+        DatahubListPivot[DatahubListPivot["MyData"] = 1] = "MyData";
+        DatahubListPivot[DatahubListPivot["TrustedInYourOrg"] = 2] = "TrustedInYourOrg";
+        /**
+         * @deprecated this tab is not in use - ThisWorkspace
+         */
+        DatahubListPivot[DatahubListPivot["ThisWorkspace"] = 3] = "ThisWorkspace";
+        DatahubListPivot[DatahubListPivot["ExternalDatasets"] = 4] = "ExternalDatasets";
+        DatahubListPivot[DatahubListPivot["Recommended"] = 5] = "Recommended";
+        DatahubListPivot[DatahubListPivot["Recent"] = 6] = "Recent";
+        DatahubListPivot[DatahubListPivot["Favorites"] = 7] = "Favorites";
+    })(exports.DatahubListPivot || (exports.DatahubListPivot = {}));
+    /**
+     * @description An enum of all valid datahub filter type
+     */
+    exports.DatahubFilterType = void 0;
+    (function (DatahubFilterType) {
+        DatahubFilterType["domain"] = "domain";
+        DatahubFilterType["workspace"] = "workspace";
+        DatahubFilterType["fabricCreateShortcut"] = "fabricCreateShortcut";
+        DatahubFilterType["fabricRegion"] = "FabricRegion";
+    })(exports.DatahubFilterType || (exports.DatahubFilterType = {}));
+    /**
+     * @description An enum of all valid display clolumn
+     */
+    exports.DisplayColumn = void 0;
+    (function (DisplayColumn) {
+        DisplayColumn["Icon"] = "icon";
+        DisplayColumn["Name"] = "name";
+        DisplayColumn["Type"] = "type";
+        DisplayColumn["Endorsement"] = "endorsement";
+        DisplayColumn["Owner"] = "owner";
+        DisplayColumn["Workspace"] = "workspaceName";
+        DisplayColumn["LastRefreshed"] = "lastRefreshed";
+        DisplayColumn["Sensitivity"] = "sensitivity";
+        DisplayColumn["LastAccessed"] = "lastAccessed";
+        DisplayColumn["NextRefresh"] = "nextRefresh";
+        DisplayColumn["Organization"] = "organization";
+        DisplayColumn["Region"] = "region";
+        DisplayColumn["Recent"] = "recent";
+    })(exports.DisplayColumn || (exports.DisplayColumn = {}));
+    /**
+     * @description An enum of all valid supported datahub style proprties
+     */
+    exports.SupportedDatahubStyleProperties = void 0;
+    (function (SupportedDatahubStyleProperties) {
+        SupportedDatahubStyleProperties["searchHighlightColor"] = "searchHighlightColor";
+        SupportedDatahubStyleProperties["lighterDialogBackgroundColor"] = "lighterDialogBackgroundColor";
+        /* row */
+        SupportedDatahubStyleProperties["selectedRowColor"] = "selectedRowColor";
+        SupportedDatahubStyleProperties["hoverRowColor"] = "hoverRowColor";
+        SupportedDatahubStyleProperties["rowBorderColor"] = "rowBorderColor";
+        SupportedDatahubStyleProperties["rowForegroundColor"] = "rowForegroundColor";
+        /* pill */
+        SupportedDatahubStyleProperties["pillColor"] = "pillColor";
+        SupportedDatahubStyleProperties["pillBorderColor"] = "pillBorderColor";
+        SupportedDatahubStyleProperties["pillBackgroundColor"] = "pillBackgroundColor";
+        SupportedDatahubStyleProperties["activePillColor"] = "activePillColor";
+        SupportedDatahubStyleProperties["activePillBorderColor"] = "activePillBorderColor";
+        SupportedDatahubStyleProperties["activePillBackgroundColor"] = "activePillBackgroundColor";
+        SupportedDatahubStyleProperties["pillHoverBackgroundColor"] = "pillHoverBackgroundColor";
+        SupportedDatahubStyleProperties["activePillHoverBackgroundColor"] = "activePillHoverBackgroundColor";
+        /* endorsement */
+        SupportedDatahubStyleProperties["endorsementForegroundColor"] = "endorsementForegroundColor";
+        /* explorer - datahub workspace navigation*/
+        SupportedDatahubStyleProperties["hoverDWBColor"] = "hoverDWBColor";
+        SupportedDatahubStyleProperties["pressedDWBColor"] = "pressedDWBColor";
+        SupportedDatahubStyleProperties["selectedDWBColor"] = "selectedDWBColor";
+        SupportedDatahubStyleProperties["foregroundWSExpandIconColor"] = "foregroundWSExpandIconColor";
+        SupportedDatahubStyleProperties["foregroundWSTitleColor"] = "foregroundWSTitleColor";
+        SupportedDatahubStyleProperties["foregroundWSSubTitleColor"] = "foregroundWSSubTitleColor";
+        SupportedDatahubStyleProperties["foregroundDWBColor"] = "foregroundDWBColor";
+        SupportedDatahubStyleProperties["foregroundDWBIconColor"] = "foregroundDWBIconColor";
+    })(exports.SupportedDatahubStyleProperties || (exports.SupportedDatahubStyleProperties = {}));
+    exports.GatewayType = void 0;
+    (function (GatewayType) {
+        GatewayType["Resource"] = "Resource";
+        GatewayType["Personal"] = "Personal";
+        GatewayType["VirtualNetwork"] = "VirtualNetwork";
+        GatewayType["TenantCloud"] = "TenantCloud";
+    })(exports.GatewayType || (exports.GatewayType = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description An enum of all valid dialog types
+     */
+    exports.DialogType = void 0;
+    (function (DialogType) {
+        DialogType[DialogType["IFrame"] = 0] = "IFrame";
+        DialogType[DialogType["MessageBox"] = 1] = "MessageBox";
+    })(exports.DialogType || (exports.DialogType = {}));
+    /**
+     * @description An enum of all valid button types
+     */
+    exports.ButtonType = void 0;
+    (function (ButtonType) {
+        ButtonType[ButtonType["Default"] = 0] = "Default";
+        ButtonType[ButtonType["Primary"] = 1] = "Primary";
+    })(exports.ButtonType || (exports.ButtonType = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description An enum of all valid error dialog widths
+     */
+    exports.ErrorDialogWidth = void 0;
+    (function (ErrorDialogWidth) {
+        ErrorDialogWidth["Small"] = "288px";
+        ErrorDialogWidth["Medium"] = "576px";
+        ErrorDialogWidth["Large"] = "864px";
+        ErrorDialogWidth["XLarge"] = "1440px";
+    })(exports.ErrorDialogWidth || (exports.ErrorDialogWidth = {}));
+    /**
+     * @description An enum of all valid error sources
+     */
+    exports.ErrorSource = void 0;
+    (function (ErrorSource) {
+        ErrorSource["FabricWorkload"] = "FabricWorkload";
+        ErrorSource["WorkloadHost"] = "WorkloadHost";
+        ErrorSource["WorkloadSDK"] = "WorkloadSDK";
+    })(exports.ErrorSource || (exports.ErrorSource = {}));
+    /**
+     * @description An enum of all valid error kinds
+     */
+    exports.ErrorKind = void 0;
+    (function (ErrorKind) {
+        ErrorKind[ErrorKind["Error"] = 1] = "Error";
+        ErrorKind[ErrorKind["Fatal"] = 2] = "Fatal";
+        ErrorKind[ErrorKind["Warning"] = 3] = "Warning";
+        ErrorKind[ErrorKind["Custom"] = 4] = "Custom";
+    })(exports.ErrorKind || (exports.ErrorKind = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     *  @description A list of predefined events that will be exposed to all consumers when they are emitted.
+     */
+    const PreDefinedEventName = ['loaded', 'rendered', 'error'];
+    /**
+     * @description An enum that defines the possible consumers that an event can be exposed to.
+     */
+    exports.ExposeTo = void 0;
+    (function (ExposeTo) {
+        /**
+         * @description
+         * Events exposed to Embed, will be emitted to the hosting app of the embedded workload.
+         * Relevant to embeddable workloads only.
+         */
+        ExposeTo[ExposeTo["Embed"] = 1] = "Embed";
+        /**
+        *  @description Includes all available consumers.
+        */
+        ExposeTo[ExposeTo["All"] = 1] = "All";
+    })(exports.ExposeTo || (exports.ExposeTo = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    exports.PreDefinedWorkloadAction = void 0;
+    (function (PreDefinedWorkloadAction) {
+        PreDefinedWorkloadAction["getItemActionDynamicAttrs"] = "getItemActionDynamicAttrs";
+        PreDefinedWorkloadAction["getHelpPaneData"] = "getHelpPaneData";
+    })(exports.PreDefinedWorkloadAction || (exports.PreDefinedWorkloadAction = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description An enum of all valid types of the message bar
+     */
+    exports.MessageBarType = void 0;
+    (function (MessageBarType) {
+        MessageBarType[MessageBarType["Information"] = 0] = "Information";
+        MessageBarType[MessageBarType["Error"] = 1] = "Error";
+        MessageBarType[MessageBarType["Warning"] = 2] = "Warning";
+        MessageBarType[MessageBarType["Success"] = 3] = "Success";
+        // SevereWarning = 4 has been deprecated
+        MessageBarType[MessageBarType["Blocked"] = 5] = "Blocked";
+        MessageBarType[MessageBarType["Copilot"] = 6] = "Copilot";
+    })(exports.MessageBarType || (exports.MessageBarType = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description An enum of all valid notification types
+     */
+    exports.NotificationType = void 0;
+    (function (NotificationType) {
+        /** @deprecated */
+        NotificationType[NotificationType["Default"] = 0] = "Default";
+        /** @deprecated */
+        NotificationType[NotificationType["Alert"] = 1] = "Alert";
+        NotificationType[NotificationType["Error"] = 2] = "Error";
+        NotificationType[NotificationType["Loading"] = 3] = "Loading";
+        NotificationType[NotificationType["Success"] = 4] = "Success";
+        NotificationType[NotificationType["Warning"] = 5] = "Warning";
+        NotificationType[NotificationType["Share"] = 6] = "Share";
+        NotificationType[NotificationType["Info"] = 7] = "Info";
+        /** @deprecated */
+        NotificationType[NotificationType["NoIcon"] = 8] = "NoIcon";
+        /** @deprecated */
+        NotificationType[NotificationType["Delete"] = 10] = "Delete";
+        /** @deprecated */
+        NotificationType[NotificationType["Add"] = 11] = "Add";
+        /** @deprecated */
+        NotificationType[NotificationType["Feedback"] = 12] = "Feedback";
+    })(exports.NotificationType || (exports.NotificationType = {}));
+    /**
+     * @description An enum of all valid notification toast durations
+     */
+    exports.NotificationToastDuration = void 0;
+    (function (NotificationToastDuration) {
+        NotificationToastDuration["Short"] = "Short";
+        NotificationToastDuration["Medium"] = "Medium";
+        NotificationToastDuration["Long"] = "Long";
+    })(exports.NotificationToastDuration || (exports.NotificationToastDuration = {}));
+    /**
+     * @description An enum of all valid notification button types
+     */
+    exports.OpenNotificationButtonType = void 0;
+    (function (OpenNotificationButtonType) {
+        OpenNotificationButtonType[OpenNotificationButtonType["Primary"] = 1] = "Primary";
+        OpenNotificationButtonType[OpenNotificationButtonType["Secondary"] = 2] = "Secondary";
+        OpenNotificationButtonType[OpenNotificationButtonType["Link"] = 3] = "Link";
+    })(exports.OpenNotificationButtonType || (exports.OpenNotificationButtonType = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    exports.OnelakeExplorerType = void 0;
+    (function (OnelakeExplorerType) {
+        OnelakeExplorerType["Tables"] = "Tables";
+        OnelakeExplorerType["Files"] = "Files";
+    })(exports.OnelakeExplorerType || (exports.OnelakeExplorerType = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description An enum of all valid host application types
+     */
+    exports.WorkloadHostApp = void 0;
+    (function (WorkloadHostApp) {
+        WorkloadHostApp[WorkloadHostApp["FabricWebApp"] = 0] = "FabricWebApp";
+        WorkloadHostApp[WorkloadHostApp["EmbedApp"] = 1] = "EmbedApp";
+    })(exports.WorkloadHostApp || (exports.WorkloadHostApp = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    exports.LifecycleEventType = void 0;
+    (function (LifecycleEventType) {
+        LifecycleEventType[LifecycleEventType["InitSucceeded"] = 1] = "InitSucceeded";
+        LifecycleEventType[LifecycleEventType["InitFailed"] = 2] = "InitFailed";
+    })(exports.LifecycleEventType || (exports.LifecycleEventType = {}));
+    /** @internal */
+    exports.WorkloadLoadEventType = void 0;
+    (function (WorkloadLoadEventType) {
+        WorkloadLoadEventType["WorkloadBootstrap"] = "WorkloadBootstrap";
+    })(exports.WorkloadLoadEventType || (exports.WorkloadLoadEventType = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description An enum of all valid modes for opening an workload UI
+     */
+    exports.OpenMode = void 0;
+    (function (OpenMode) {
+        OpenMode[OpenMode["Append"] = 1] = "Append";
+        OpenMode[OpenMode["ReplaceAll"] = 2] = "ReplaceAll";
+    })(exports.OpenMode || (exports.OpenMode = {}));
+    /**
+     * @description An enum of all valid modes for closing an workload UI
+     */
+    exports.CloseMode = void 0;
+    (function (CloseMode) {
+        CloseMode[CloseMode["PopOne"] = 1] = "PopOne";
+        CloseMode[CloseMode["ClearAll"] = 2] = "ClearAll";
+    })(exports.CloseMode || (exports.CloseMode = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    const EXT_META_KEY = Symbol.for('WORKLOAD_META');
+    const iframeIdKey = '__iframeId';
+    const iframeTypeKey = '__iframeType';
+    const environmentNameKey = '__environmentName';
+    const workloadNameKey = '__extensionName';
+    const workloadHostOriginKey = '__extensionHostOrigin';
+    const bootstrapPathKey = '__bootstrapPath';
+    const unminKey = '__unmin';
+    const useCDNKey = '__useCDN';
+    const cdnFallbackKey = '__cdnFallbackTime';
+    const parallelLoadKey = '__parallelLoadingEnabled';
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description
+     * This class is responsible for loading and providing metadata for workloads, including information such as iframe ID and type.
+     */
+    class WorkloadMetaLoader {
+        constructor(target = window) {
+            this.target = target;
+        }
+        /**
+         * @description
+         * A static method to load the workload metadata for a given workload window
+         * @param target The target workload window
+         * @returns Loaded workload metadata
+         */
+        static Load(target) {
+            return new this(target).load();
+        }
+        /**
+         * @description
+         * A method to load the workload metadata
+         * @returns Loaded workload metadata
+         */
+        load() {
+            return this.meta || (this.meta = this.tryLoad());
+        }
+        get meta() {
+            return this.target[EXT_META_KEY];
+        }
+        set meta(meta) {
+            Object.defineProperty(this.target, EXT_META_KEY, {
+                get: () => meta,
+                enumerable: false,
+                configurable: false,
+            });
+        }
+        tryLoad() {
+            const params = new URLSearchParams(this.target.location.search);
+            const raw = {
+                iframeId: params.get(iframeIdKey),
+                iframeType: params.get(iframeTypeKey),
+                environmentName: params.get(environmentNameKey),
+                workloadName: params.get(workloadNameKey),
+                workloadHostOrigin: params.get(workloadHostOriginKey),
+                bootstrapPath: params.get(bootstrapPathKey),
+                unmin: params.get(unminKey) === 'true',
+                useCDN: params.get(useCDNKey) === 'true',
+                cdnFallbackTime: params.get(cdnFallbackKey),
+                parallelLoadingEnabled: params.get(parallelLoadKey) === 'true',
+            };
+            this.assert(raw);
+            return Object.freeze(raw);
+        }
+        // Note: update this method if meta definition changed
+        assert(isMeta) {
+            const meta = isMeta;
+            if (meta.iframeId == null) {
+                throw new Error("Empty iframeId");
+            }
+            if (!/^(worker|dialog|panel|page)$/.test(meta.iframeType || '')) {
+                throw new Error(`Invalid uiType: "${meta.iframeType}", must be 'worker', 'page', 'panel' or 'dialog'`);
+            }
+            if (meta.environmentName == null) {
+                throw new Error("Empty environmentName");
+            }
+            if (meta.workloadName == null) {
+                throw new Error("Empty workloadName");
+            }
+            if (meta.workloadHostOrigin == null) {
+                throw new Error("Empty workloadHostOrigin");
+            }
+            if (meta.unmin == null) {
+                throw new Error("Empty unmin");
+            }
+            if (meta.useCDN == null) {
+                throw new Error("Empty useCDN");
+            }
+            if (meta.parallelLoadingEnabled == null) {
+                throw new Error("Empty parallelLoadingEnabled");
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description A function that creates a message creator with a specified type and optional properties
+     */
+    const createMessage = (type, creator) => Object.assign(creator !== undefined
+        ? (...args) => (Object.assign({ type }, creator(...args)))
+        : (props) => props !== undefined
+            ? (Object.assign({ type }, props))
+            : ({ type }), { type });
+    /**
+     * @description A function that creates a message creator for workload messages with a specified type and optional properties
+     */
+    const createWorkloadMessage = (type) => Object.assign((props) => createMessage(type, (iframeId) => (Object.assign({ iframeId }, props))), { type });
+    const startPrefix = '[Start]';
+    const resolvePrefix = '[Resolve]';
+    const rejectPrefix = '[Reject]';
+    /**
+     * @description A function that creates a set of message creators for asynchronous workload messages with a specified type and optional properties
+     */
+    const createAsyncWorkloadMessage = (type) => ({
+        start: Object.assign((props) => createMessage(`${startPrefix} ${type}`, (iframeId) => (Object.assign(Object.assign({}, props), { asyncId: uuid.v4(), iframeId }))), { type: `${startPrefix} ${type}` }),
+        resolve: Object.assign((props) => createMessage(`${resolvePrefix} ${type}`, (iframeId, asyncId) => (Object.assign(Object.assign({}, props), { asyncId,
+            iframeId }))), { type: `${resolvePrefix} ${type}` }),
+        reject: Object.assign((props) => createMessage(`${rejectPrefix} ${type}`, (iframeId, asyncId) => (Object.assign(Object.assign({}, props), { asyncId,
+            iframeId }))), { type: `${rejectPrefix} ${type}` }),
+    });
+
+    function recursiveRenameKeys(obj, reverse = false) {
+        const mapping = {
+            artifact: 'item',
+            Artifact: 'Item',
+            ARTIFACT: 'ITEM',
+            trident: 'fabric',
+            Trident: 'Fabric',
+            TRIDENT: 'FABRIC',
+            extension: 'workload',
+            Extension: 'Workload',
+            EXTENSION: 'WORKLOAD'
+        };
+        const keyMapping = reverse ? invertMapping(mapping) : mapping;
+    
+        // Set of keys that should not be transformed
+        const immutableKeys = new Set(['workloadPayload']);
+    
+        // Helper function to reverse the mapping
+        function invertMapping(map) {
+            const inverted = {};
+            for (const key in map) {
+                inverted[map[key]] = key;
+            }
+            return inverted;
+        }
+    
+        // Helper function to transform keys based on keyMapping
+        function transformName(name) {
+            if (name == null || typeof name !== 'string' || immutableKeys.has(name)) {
+                return name;
+            }
+            let transformedName = name;
+            for (const mapKey in keyMapping) {
+                transformedName = transformedName.replace(mapKey, keyMapping[mapKey]);
+            }
+            return transformedName;
+        }
+    
+        // Helper function to recursively transform object keys
+        function transformObject(obj) {
+            if (Array.isArray(obj)) {
+                return obj.map(transformObject);
+            } else if (obj && typeof obj === 'object') {
+                return Object.keys(obj).reduce((acc, key) => {
+                    const newKey = immutableKeys.has(key) ? key : transformName(key);
+                    acc[newKey] = key === 'type' ? transformName(obj[key]) : transformObject(obj[key]);
+                    return acc;
+                }, {});
+            }
+    
+            return obj;
+        }
+    
+        return transformObject(obj);
+    }
+
+    function transformMessageEvent(eventMessage, mapping) {
+        const newEvent = {};
+        for (const key in eventMessage) {
+            newEvent[key] = eventMessage[key];
+        }
+        if (newEvent.data) {
+            newEvent.data = recursiveRenameKeys(newEvent.data, mapping);
+        }
+
+        return newEvent;
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description A function that checks if a given message is an workload message
+     * @param message The input message
+     * @returns True if the message is an workload message. Otherwise, False.
+     */
+    function isWorkloadMessage(message) {
+        const workloadMessage = message;
+        return workloadMessage != null
+            && typeof workloadMessage === 'object'
+            && workloadMessage.type !== undefined
+            && workloadMessage.iframeId !== undefined;
+    }
+    /**
+     * @description A function that checks if a given message is an asynchronous workload message
+     * @param message The input message
+     * @returns True if the message is an asynchronous workload message. Otherwise, False.
+     */
+    function isAsyncWorkloadMessage(message) {
+        return message.asyncId !== undefined;
+    }
+    /**
+     * @description
+     * A broker that facilitates duplex communication between the host and workload using postMessage
+     */
+    class MessageBroker {
+        constructor(config) {
+            this.genericListeners = new Set();
+            this.syncListeners = new Map();
+            this.asyncListeners = new Map();
+            this.asyncResponders = new Map();
+            this.listener = (message) => this.onMessage(message);
+            this.getTargetWindow = config.getTargetWindow;
+            this.getTargetOrigin = config.getTargetOrigin;
+            this.onWorkloadMessage = config.onWorkloadMessage;
+            this.shouldProcessMessage = config.shouldProcessMessage;
+            window.addEventListener('message', this.listener);
+        }
+        /**
+         * @description Registers a message listener that is invoked whenever a message of any type is received by the message broker
+         * @param handler The message listener
+         */
+        listen(handler) {
+            this.genericListeners.add(handler);
+        }
+        /**
+         * @description Registers a message listener that is invoked when a synchronous message of a specific type is received by the message broker
+         * @param creator The synchronous message type to listen for
+         * @param handler The message listener
+         */
+        listenFor(creator, handler) {
+            const type = creator.type;
+            const syncListeners = this.syncListeners.get(type);
+            if (syncListeners) {
+                syncListeners.add(handler);
+            }
+            else {
+                this.syncListeners.set(type, new Set([handler]));
+            }
+        }
+        /**
+         * @description Registers a message listener that is invoked when an asynchronous message of a specific type is received by the message broker
+         * @param creator The asynchronous message type to listen for
+         * @param handler The message listener
+         */
+        listenForAsync(creator, handler) {
+            const type = creator.start.type;
+            const asyncListeners = this.asyncListeners.get(type);
+            if (asyncListeners) {
+                asyncListeners.add(handler);
+            }
+            else {
+                this.asyncListeners.set(type, new Set([handler]));
+            }
+        }
+        /**
+         * @description Sends a synchronous message and returns immediately
+         * @param message The synchronous messsage to send
+         */
+        send(message) {
+            this.sendMessage(message);
+        }
+        /**
+         * @description Sends an asynchronous message and waits until the receiver of the message responds
+         * @param message The asynchronous messsage to send
+         * @returns The response of the asynchronous messsage
+         */
+        sendAsync(message) {
+            return tslib.__awaiter(this, void 0, void 0, function* () {
+                return new Promise((resolve, reject) => {
+                    const { asyncId } = message;
+                    this.asyncResponders.set(asyncId, [
+                        resolve,
+                        reject,
+                    ]);
+                    this.sendMessage(message);
+                });
+            });
+        }
+        onMessage(extEvent) {
+            const event = transformMessageEvent(extEvent);
+            if (!this.shouldProcessMessage(event)) {
+                return;
+            }
+            const message = event.data;
+            if (isWorkloadMessage(message)) {
+                if (this.onWorkloadMessage) {
+                    this.onWorkloadMessage(event);
+                }
+                const isAsyncMessage = isAsyncWorkloadMessage(message);
+                if (isAsyncMessage) {
+                    const resolvers = this.asyncResponders.get(message.asyncId);
+                    if (resolvers) {
+                        const [resolve, reject] = resolvers;
+                        const { type, asyncId, iframeId } = message, props = tslib.__rest(message, ["type", "asyncId", "iframeId"]);
+                        if (type.startsWith(resolvePrefix)) {
+                            resolve(props);
+                        }
+                        else if (message.type.startsWith(rejectPrefix)) {
+                            reject(props);
+                        }
+                    }
+                }
+                for (const listener of Array.from(this.genericListeners)) {
+                    listener(message);
+                }
+                const syncListeners = this.syncListeners.get(message.type);
+                if (syncListeners) {
+                    for (const listener of Array.from(syncListeners)) {
+                        listener(message);
+                    }
+                }
+                if (isAsyncWorkloadMessage(message) && message.type.startsWith(startPrefix)) {
+                    const asyncListeners = this.asyncListeners.get(message.type);
+                    if (asyncListeners) {
+                        for (const listener of Array.from(asyncListeners)) {
+                            Promise.resolve(listener(message)).then((responseCreator) => this.sendMessage(responseCreator(message.iframeId, message.asyncId)));
+                        }
+                    }
+                }
+            }
+        }
+        sendMessage(message) {
+            const extMessage = recursiveRenameKeys(message, true);
+            this.getTargetWindow(extMessage).postMessage(extMessage, this.getTargetOrigin(extMessage));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description A function that creates WorkloadClientMessageBroker instance
+     * @param config Configuration settings for creating an instance of WorkloadClientMessageBroker
+     * @returns The created WorkloadClientMessageBroker instance
+     */
+    function createWorkloadClientMessageBroker(config) {
+        return new WorkloadClientMessageBrokerImpl(config.getIframeId, config.workloadHostWindow);
+    }
+    class WorkloadClientMessageBrokerImpl {
+        constructor(getIframeId, workloadHostWindow) {
+            this.getIframeId = getIframeId;
+            this.broker = new MessageBroker({
+                getTargetWindow: () => {
+                    if (!workloadHostWindow) {
+                        throw new Error('Cannot find the workload host window');
+                    }
+                    return workloadHostWindow;
+                },
+                getTargetOrigin: () => {
+                    return WorkloadMetaLoader.Load().workloadHostOrigin;
+                },
+                shouldProcessMessage: (event) => {
+                    return event.origin === WorkloadMetaLoader.Load().workloadHostOrigin;
+                },
+            });
+        }
+        listenFor(creator, handler) {
+            this.broker.listenFor(creator, handler);
+        }
+        listenForAsync(creator, handler) {
+            this.broker.listenForAsync(creator, handler);
+        }
+        send(message) {
+            this.broker.send(message(this.getIframeId()));
+        }
+        sendAsync(message) {
+            return tslib.__awaiter(this, void 0, void 0, function* () {
+                return this.broker.sendAsync(message(this.getIframeId()));
+            });
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    exports.WorkloadMessageType = void 0;
+    (function (WorkloadMessageType) {
+        WorkloadMessageType["executeAction"] = "ExecuteAction";
+        WorkloadMessageType["onAction"] = "OnAction";
+        WorkloadMessageType["navigateAsync"] = "NavigateAsync";
+        WorkloadMessageType["navigateWorkloadAsync"] = "NavigateWorkloadAsync";
+        WorkloadMessageType["onNavigate"] = "OnNavigate";
+        WorkloadMessageType["listenLeave"] = "ListenLeave";
+        WorkloadMessageType["onLeave"] = "OnLeave";
+        WorkloadMessageType["listenLeaveEnd"] = "ListenLeaveEnd";
+        WorkloadMessageType["onLeaveEnd"] = "OnLeaveEnd";
+        WorkloadMessageType["getAccessToken"] = "GetAccessToken";
+        WorkloadMessageType["getSettings"] = "GetSettings";
+        WorkloadMessageType["onSettingsChange"] = "OnSettingsChange";
+        WorkloadMessageType["openNotification"] = "OpenNotification";
+        WorkloadMessageType["hideNotification"] = "hideNotification";
+        WorkloadMessageType["openPage"] = "OpenPage";
+        WorkloadMessageType["openDatahubDialog"] = "OpenDatahubDialog";
+        WorkloadMessageType["openDatahubWizardDialog"] = "OpenDatahubWizardDialog";
+        WorkloadMessageType["openDialog"] = "OpenDialog";
+        WorkloadMessageType["closeDialog"] = "CloseDialog";
+        WorkloadMessageType["openPanel"] = "OpenPanel";
+        WorkloadMessageType["closePanel"] = "ClosePanel";
+        WorkloadMessageType["logEvent"] = "LogEvent";
+        WorkloadMessageType["postLifecycleEvent"] = "PostLifecycleEvent";
+        WorkloadMessageType["postDOMEvent"] = "PostDOMEvent";
+        WorkloadMessageType["getDOMRect"] = "GetDOMRect";
+        WorkloadMessageType["resetFocus"] = "ResetFocus";
+        WorkloadMessageType["getTheme"] = "GetTheme";
+        WorkloadMessageType["onThemeChange"] = "OnThemeChange";
+        WorkloadMessageType["openItemRecentRuns"] = "OpenItemRecentRuns";
+        WorkloadMessageType["handleRequestFailure"] = "HandleRequestFailure";
+        WorkloadMessageType["handleInvalidRoute"] = "HandleInvalidRoute";
+        WorkloadMessageType["openError"] = "openError";
+        WorkloadMessageType["emitEvent"] = "EmitEvent";
+        WorkloadMessageType["checkPermissionsOfItem"] = "CheckPermissionsOfItem";
+        WorkloadMessageType["checkPermissionsOfWorkspace"] = "CheckPermissionsOfWorkspace";
+        WorkloadMessageType["getPermissionsOfItem"] = "GetPermissionsOfItem";
+        WorkloadMessageType["getPermissionsOfItemByUser"] = "GetPermissionsOfItemByUser";
+        WorkloadMessageType["getPermissionsOfWorkspace"] = "GetPermissionsOfWorkspace";
+        WorkloadMessageType["checkItemSharingEnabled"] = "CheckItemSharingEnabled";
+        WorkloadMessageType["getItemTypeShareablePermissions"] = "GetItemTypeShareablePermissions";
+        WorkloadMessageType["openItemSharingDialog"] = "OpenItemSharingDialog";
+        WorkloadMessageType["openItemSharingDialogWithResult"] = "OpenItemSharingDialogWithResult";
+        WorkloadMessageType["openItemSettings"] = "OpenItemSettings";
+        WorkloadMessageType["onCloseItemSettings"] = "onCloseItemSettings";
+        WorkloadMessageType["resizeIframeHeight"] = "resizeIframeHeight";
+        WorkloadMessageType["postCdnFallbackEvent"] = "PostCdnFallbackEvent";
+        WorkloadMessageType["openSubfolderPickerDialog"] = "OpenSubfolderPickerDialog";
+        WorkloadMessageType["favoriteItem"] = "FavoriteItem";
+        WorkloadMessageType["unFavoriteItem"] = "UnFavoriteItem";
+        WorkloadMessageType["getItemFavoriteState"] = "GetItemFavoriteState";
+        WorkloadMessageType["onItemFavoriteStateChange"] = "OnItemFavoriteUpdate";
+        WorkloadMessageType["subscribeItemFavoriteStateChange"] = "SubscribeItemFavoriteUpdate";
+        WorkloadMessageType["unSubscribeItemFavoriteStateChange"] = "UnSubscribeItemFavoriteUpdate";
+        WorkloadMessageType["performanceItemsRequest"] = "PerformanceItemsRequest";
+    })(exports.WorkloadMessageType || (exports.WorkloadMessageType = {}));
+    const executeAction = createAsyncWorkloadMessage(exports.WorkloadMessageType.executeAction);
+    const onAction = createAsyncWorkloadMessage(exports.WorkloadMessageType.onAction);
+    const navigateAsync = createAsyncWorkloadMessage(exports.WorkloadMessageType.navigateAsync);
+    const navigateWorkloadAsync = createAsyncWorkloadMessage(exports.WorkloadMessageType.navigateWorkloadAsync);
+    const onNavigate = createWorkloadMessage(exports.WorkloadMessageType.onNavigate);
+    const listenLeave = createAsyncWorkloadMessage(exports.WorkloadMessageType.listenLeave);
+    const onLeave = createAsyncWorkloadMessage(exports.WorkloadMessageType.onLeave);
+    const listenLeaveEnd = createAsyncWorkloadMessage(exports.WorkloadMessageType.listenLeaveEnd);
+    const onLeaveEnd = createAsyncWorkloadMessage(exports.WorkloadMessageType.onLeaveEnd);
+    const getAccessToken = createAsyncWorkloadMessage(exports.WorkloadMessageType.getAccessToken);
+    const getSettings = createAsyncWorkloadMessage(exports.WorkloadMessageType.getSettings);
+    const onSettingsChange = createWorkloadMessage(exports.WorkloadMessageType.onSettingsChange);
+    const openNotification = createAsyncWorkloadMessage(exports.WorkloadMessageType.openNotification);
+    const hideNotification = createWorkloadMessage(exports.WorkloadMessageType.hideNotification);
+    const openPage = createAsyncWorkloadMessage(exports.WorkloadMessageType.openPage);
+    const openDatahubDialog = createAsyncWorkloadMessage(exports.WorkloadMessageType.openDatahubDialog);
+    const openDatahubWizardDialog = createAsyncWorkloadMessage(exports.WorkloadMessageType.openDatahubWizardDialog);
+    const openDialog = createAsyncWorkloadMessage(exports.WorkloadMessageType.openDialog);
+    const closeDialog = createAsyncWorkloadMessage(exports.WorkloadMessageType.closeDialog);
+    const openPanel = createAsyncWorkloadMessage(exports.WorkloadMessageType.openPanel);
+    const closePanel = createAsyncWorkloadMessage(exports.WorkloadMessageType.closePanel);
+    const logEvent = createWorkloadMessage(exports.WorkloadMessageType.logEvent);
+    const postLifecycleEvent = createWorkloadMessage(exports.WorkloadMessageType.postLifecycleEvent);
+    const postDOMEvent = createWorkloadMessage(exports.WorkloadMessageType.postDOMEvent);
+    const getDOMRect = createAsyncWorkloadMessage(exports.WorkloadMessageType.getDOMRect);
+    const resetFocus = createWorkloadMessage(exports.WorkloadMessageType.resetFocus);
+    const getTheme = createAsyncWorkloadMessage(exports.WorkloadMessageType.getTheme);
+    const onThemeChange = createWorkloadMessage(exports.WorkloadMessageType.onThemeChange);
+    const openItemRecentRuns = createAsyncWorkloadMessage(exports.WorkloadMessageType.openItemRecentRuns);
+    const handleRequestFailure = createAsyncWorkloadMessage(exports.WorkloadMessageType.handleRequestFailure);
+    const handleInvalidRoute = createWorkloadMessage(exports.WorkloadMessageType.handleInvalidRoute);
+    const openError = createAsyncWorkloadMessage(exports.WorkloadMessageType.openError);
+    const emitEvent = createWorkloadMessage(exports.WorkloadMessageType.emitEvent);
+    const checkPermissionsOfItem = createAsyncWorkloadMessage(exports.WorkloadMessageType.checkPermissionsOfItem);
+    const checkPermissionsOfWorkspace = createAsyncWorkloadMessage(exports.WorkloadMessageType.checkPermissionsOfWorkspace);
+    const getPermissionsOfItem = createAsyncWorkloadMessage(exports.WorkloadMessageType.getPermissionsOfItem);
+    const getPermissionsOfItemByUser = createAsyncWorkloadMessage(exports.WorkloadMessageType.getPermissionsOfItemByUser);
+    const getPermissionsOfWorkspace = createAsyncWorkloadMessage(exports.WorkloadMessageType.getPermissionsOfWorkspace);
+    const checkItemSharingEnabled = createAsyncWorkloadMessage(exports.WorkloadMessageType.checkItemSharingEnabled);
+    const getItemTypeShareablePermissions = createAsyncWorkloadMessage(exports.WorkloadMessageType.getItemTypeShareablePermissions);
+    const openItemSharingDialog = createWorkloadMessage(exports.WorkloadMessageType.openItemSharingDialog);
+    const openItemSharingDialogWithResult = createAsyncWorkloadMessage(exports.WorkloadMessageType.openItemSharingDialogWithResult);
+    const openItemSettings = createAsyncWorkloadMessage(exports.WorkloadMessageType.openItemSettings);
+    const onCloseItemSettings = createWorkloadMessage(exports.WorkloadMessageType.onCloseItemSettings);
+    const resizeIframeHeight = createAsyncWorkloadMessage(exports.WorkloadMessageType.resizeIframeHeight);
+    const postCdnFallbackEvent = createWorkloadMessage(exports.WorkloadMessageType.postCdnFallbackEvent);
+    const openSubfolderPickerDialog = createAsyncWorkloadMessage(exports.WorkloadMessageType.openSubfolderPickerDialog);
+    const favoriteItem = createAsyncWorkloadMessage(exports.WorkloadMessageType.favoriteItem);
+    const unFavoriteItem = createAsyncWorkloadMessage(exports.WorkloadMessageType.unFavoriteItem);
+    const getItemFavoriteState = createAsyncWorkloadMessage(exports.WorkloadMessageType.getItemFavoriteState);
+    const onItemFavoriteStateChange = createWorkloadMessage(exports.WorkloadMessageType.onItemFavoriteStateChange);
+    const subscribeItemFavoriteStateChange = createAsyncWorkloadMessage(exports.WorkloadMessageType.subscribeItemFavoriteStateChange);
+    const unSubscribeItemFavoriteStateChange = createWorkloadMessage(exports.WorkloadMessageType.unSubscribeItemFavoriteStateChange);
+    const getPerformanceItems = createAsyncWorkloadMessage(exports.WorkloadMessageType.performanceItemsRequest);
+    /** @internal */
+    const Messages$1 = {
+        executeAction,
+        onAction,
+        navigateAsync,
+        navigateWorkloadAsync,
+        onNavigate,
+        listenLeave,
+        onLeave,
+        listenLeaveEnd,
+        onLeaveEnd,
+        getAccessToken,
+        getSettings,
+        onSettingsChange,
+        openNotification,
+        hideNotification,
+        openPage,
+        openDatahubDialog,
+        openDatahubWizardDialog,
+        openDialog,
+        closeDialog,
+        openPanel,
+        closePanel,
+        logEvent,
+        postLifecycleEvent,
+        postDOMEvent,
+        getDOMRect,
+        resetFocus,
+        getTheme,
+        onThemeChange,
+        openItemRecentRuns,
+        openError,
+        emitEvent,
+        handleRequestFailure,
+        handleInvalidRoute,
+        checkPermissionsOfItem,
+        checkPermissionsOfWorkspace,
+        getPermissionsOfItem,
+        getPermissionsOfItemByUser,
+        getPermissionsOfWorkspace,
+        checkItemSharingEnabled,
+        getItemTypeShareablePermissions,
+        openItemSharingDialog,
+        openItemSharingDialogWithResult,
+        openItemSettings,
+        onCloseItemSettings,
+        resizeIframeHeight,
+        postCdnFallbackEvent,
+        openSubfolderPickerDialog,
+        favoriteItem,
+        unFavoriteItem,
+        getItemFavoriteState,
+        onItemFavoriteStateChange,
+        subscribeItemFavoriteStateChange,
+        unSubscribeItemFavoriteStateChange,
+        getPerformanceItems,
+    };
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    class _ErrorHandlingClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        registerUnhandledExceptionHandler(config) {
+            window.addEventListener('unhandledrejection', (event) => {
+                var _a, _b;
+                event.preventDefault();
+                let unhandledErrorMessage = 'Unknown Error';
+                if (event.reason instanceof Error) {
+                    unhandledErrorMessage = event.reason.message;
+                }
+                else {
+                    unhandledErrorMessage = `Got unhandled rejection of non Error type. Type: ${typeof (event === null || event === void 0 ? void 0 : event.reason)}, className: ${((_b = (_a = event === null || event === void 0 ? void 0 : event.reason) === null || _a === void 0 ? void 0 : _a.constructor) === null || _b === void 0 ? void 0 : _b.name) || ''}.`;
+                }
+                this.broker.send(Messages$1.logEvent({
+                    name: 'Unhandled Exception',
+                    properties: {
+                        ErrorCategory: 'UnhandledRejection',
+                        ErrorMessage: unhandledErrorMessage,
+                        IFrame: config.iframe,
+                    },
+                }));
+            });
+            window.addEventListener('error', (event) => {
+                this.broker.send(Messages$1.logEvent({
+                    name: 'Unhandled Exception',
+                    properties: {
+                        ErrorCategory: 'GlobalError',
+                        ErrorMessage: (event === null || event === void 0 ? void 0 : event.message) || '',
+                        ErrorSource: (event === null || event === void 0 ? void 0 : event.filename) || '',
+                        IFrame: config.iframe,
+                    },
+                }));
+            });
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    class _InteractionClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        postDOMEvent(config) {
+            const defaultConfig = {
+                eventInitDict: {
+                    bubbles: true,
+                    cancelable: true,
+                    composed: true,
+                },
+            };
+            return this.broker.send(Messages$1.postDOMEvent(Object.assign(Object.assign({}, defaultConfig), config)));
+        }
+        onResetFocus(callback) {
+            return this.broker.listenFor(Messages$1.resetFocus, callback);
+        }
+        onQueryDomRect(callback) {
+            this.broker.listenForAsync(Messages$1.getDOMRect, (config) => {
+                return callback(config)
+                    .then((result) => Messages$1.getDOMRect.resolve(Object.assign({}, result)))
+                    .catch((error) => Messages$1.getDOMRect.reject({ error }));
+            });
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    const MAX_CACHE_SIZE = 1000;
+    /** @internal */
+    class _PerformanceItemsClient {
+        constructor(broker) {
+            this.broker = broker;
+            this.cursor = 0; // cursor to keep track of the current position in the virtual performanceItems array.
+            this.performanceItems = [];
+            this.performanceObserver = window.PerformanceObserver
+                ? new PerformanceObserver((list) => {
+                    this.pushPerformanceItems(list.getEntries());
+                })
+                : null;
+        }
+        init() {
+            var _a;
+            this.pushPerformanceItems(performance.getEntries()); // push the initial performance items.
+            (_a = this.performanceObserver) === null || _a === void 0 ? void 0 : _a.observe({
+                entryTypes: [
+                    // mark and measure are usually customized by workloads, which are not meanful to shell, instead, they can be noisy.
+                    ...PerformanceObserver.supportedEntryTypes.filter((t) => t !== 'mark' && t !== 'measure')
+                ],
+                buffered: false, // Ignore the buffered entries.
+            });
+            // start listening for getPerformanceItems requests.
+            this.broker.listenForAsync(Messages$1.getPerformanceItems, (config) => {
+                return Messages$1.getPerformanceItems.resolve(this.pickPerformanceItems(config));
+            });
+        }
+        pushPerformanceItems(items) {
+            this.performanceItems = this.performanceItems.concat(items);
+            this.checkSize();
+        }
+        checkSize() {
+            if (this.performanceItems.length > MAX_CACHE_SIZE) {
+                const excess = this.performanceItems.length - MAX_CACHE_SIZE;
+                this.performanceItems.splice(0, excess);
+                this.cursor += excess;
+            }
+        }
+        pickPerformanceItems(config) {
+            var _a;
+            const { start, length } = config;
+            const startIndex = Math.max(start - this.cursor, 0);
+            const endIndex = Math.min(startIndex + Math.max(length, 0), this.performanceItems.length);
+            const items = this.performanceItems.slice(startIndex, endIndex);
+            this.performanceItems.splice(0, endIndex); // remove the items that are being sent, also remove the items before these.
+            const originalCursor = this.cursor;
+            this.cursor += endIndex;
+            if (length === 0) { // Special input to stop the observer.
+                (_a = this.performanceObserver) === null || _a === void 0 ? void 0 : _a.disconnect();
+            }
+            return {
+                performanceItems: items.map(this.convertPerformanceItem),
+                range: [startIndex + originalCursor, endIndex + originalCursor],
+                pendingItemsLength: this.performanceItems.length,
+            };
+        }
+        convertPerformanceItem(entry) {
+            return JSON.parse(JSON.stringify(entry));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    class _TelemetryClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        logEvent(event, eventOptions) {
+            return this.broker.send(Messages$1.logEvent(Object.assign(Object.assign({}, event), { eventOptions })));
+        }
+        postLifecycleEvent(event) {
+            this.broker.send(Messages$1.postLifecycleEvent(event));
+        }
+        postCdnFallbackEvent(event) {
+            this.broker.send(Messages$1.postCdnFallbackEvent(event));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    function getWorker(meta, frames) {
+        return meta.iframeType === 'worker'
+            ? window
+            : Array.prototype.find.call(frames, (frame) => {
+                try {
+                    return isTargetedIFrame(frame, meta.workloadName, 'worker');
+                }
+                catch (_a) {
+                    return undefined;
+                }
+            });
+    }
+    function isTargetedIFrame(target, workloadName, iframeType) {
+        const meta = WorkloadMetaLoader.Load(target);
+        return meta.iframeType === iframeType && meta.workloadName === workloadName;
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    const WORKER_IFRAME_STATE = 'WORKER_IFRAME_STATE';
+    /** @internal */
+    class _WorkerClient {
+        constructor(metaFactory, config) {
+            this.metaFactory = metaFactory;
+            this.config = config;
+        }
+        get workIFrameState() {
+            if (this._workerIFrameState) {
+                return Promise.resolve(this._workerIFrameState);
+            }
+            const meta = this.metaFactory();
+            return this.getState(meta, this.config.workloadHostWindow.frames, WORKER_IFRAME_STATE).then(workerState => {
+                this._workerIFrameState = workerState;
+                return workerState;
+            });
+        }
+        sleep(delayInMS) {
+            return new Promise(resolve => setTimeout(resolve, delayInMS));
+        }
+        getState(meta, frames, symbolKey) {
+            return tslib.__awaiter(this, void 0, void 0, function* () {
+                const symbol = Symbol.for(symbolKey);
+                const maxRetryCount = 20;
+                const delayInMS = 100;
+                let worker = undefined;
+                let currentRetryCount = 0;
+                while (currentRetryCount < maxRetryCount && !worker) {
+                    worker = getWorker(meta, frames);
+                    if (!worker) {
+                        yield this.sleep(delayInMS);
+                        currentRetryCount++;
+                    }
+                }
+                if (!worker) {
+                    throw new Error(`Cannot find the worker frame of ${meta.workloadName}`);
+                }
+                if (!worker[symbol]) {
+                    Object.defineProperty(worker, symbol, {
+                        value: {},
+                        writable: false,
+                        enumerable: false,
+                        configurable: false,
+                    });
+                }
+                return worker;
+            });
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class ActionClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        execute(action) {
+            return this.broker.sendAsync(Messages$1.executeAction.start(action));
+        }
+        onAction(handler) {
+            return this.broker.listenForAsync(Messages$1.onAction, (action) => {
+                return handler(action)
+                    .then((result) => Messages$1.onAction.resolve({ result }))
+                    .catch((error) => Messages$1.onAction.reject({ error }));
+            });
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class ItemRecentRunsClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        open(config) {
+            return this.broker.sendAsync(Messages$1.openItemRecentRuns.start(config));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class ItemSettingsClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        open(config) {
+            return this.broker.sendAsync(Messages$1.openItemSettings.start(config));
+        }
+        onClose(callback) {
+            return this.broker.listenFor(Messages$1.onCloseItemSettings, callback);
+        }
+        setIframeDimensions(config) {
+            this.broker.sendAsync(Messages$1.resizeIframeHeight.start({ iframeHeight: config.iframeHeight, itemId: config.itemId }));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    let AuthClient$1 = class AuthClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        getAccessToken(scopes, forceRefresh) {
+            return this.broker.sendAsync(Messages$1.getAccessToken.start({ scopes, forceRefresh }));
+        }
+    };
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class DatahubClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        openDialog(config) {
+            return this.broker.sendAsync(Messages$1.openDatahubDialog.start(config));
+        }
+        openDatahubWizardDialog(config) {
+            return this.broker.sendAsync(Messages$1.openDatahubWizardDialog.start(config));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    function runWithFocusRestoration(callback, preventFocusRestoration) {
+        return tslib.__awaiter(this, void 0, void 0, function* () {
+            if (preventFocusRestoration) {
+                return yield callback();
+            }
+            const activeElement = getFocusedElementPierceShadowDom();
+            try {
+                return yield callback();
+            }
+            finally {
+                if (activeElement instanceof HTMLElement && activeElement.isConnected) {
+                    activeElement.focus();
+                }
+            }
+        });
+    }
+    /** copied from @angular/cdk/platform */
+    function getFocusedElementPierceShadowDom() {
+        let activeElement = typeof document !== 'undefined' && document
+            ? document.activeElement
+            : null;
+        while (activeElement && activeElement.shadowRoot) {
+            const newActiveElement = activeElement.shadowRoot.activeElement;
+            if (newActiveElement === activeElement) {
+                break;
+            }
+            else {
+                activeElement = newActiveElement;
+            }
+        }
+        return activeElement;
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class DialogClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        open(config) {
+            return runWithFocusRestoration(() => this.broker.sendAsync(Messages$1.openDialog.start(config)), config.preventFocusRestoration);
+        }
+        close(config) {
+            return this.broker.sendAsync(Messages$1.closeDialog.start(config || {}));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class ErrorHandlingClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        handleRequestFailure(response) {
+            // Normalize headers because Headers object cannot be serialized by postMessage.
+            let headers = response.headers;
+            if (Headers && response.headers instanceof Headers) {
+                headers = {};
+                response.headers.forEach((value, key) => {
+                    headers[key] = value;
+                });
+            }
+            return this.broker.sendAsync(Messages$1.handleRequestFailure.start(Object.assign(Object.assign({}, response), { headers })));
+        }
+        handleInvalidRoute(config) {
+            this.broker.send(Messages$1.handleInvalidRoute(config || {}));
+        }
+        openErrorDialog(config) {
+            function probeErrorMessage(reason) {
+                if (reason == null) {
+                    return 'Unknown error';
+                }
+                if (reason instanceof Error) {
+                    return `${reason.name}: ${reason.message}`;
+                }
+                if (typeof reason === 'object') {
+                    try {
+                        return JSON.stringify(reason);
+                    }
+                    catch (e) {
+                        return `Unstructured Error: ${e instanceof Error ? e.message : e}`;
+                    }
+                }
+                return `${reason}`;
+            }
+            return this.broker.sendAsync(Messages$1.openError.start({
+                errorMsg: probeErrorMessage(config.errorMsg),
+                errorOptions: config.errorOptions,
+                kind: config.kind,
+                featureName: config.featureName,
+                width: config.width,
+                autoFocus: config.autoFocus,
+            }));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class EventClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        emitEvent(details) {
+            return this.broker.send(Messages$1.emitEvent(details));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class NavigationClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        navigate(target, route) {
+            return target === 'host'
+                ? this.broker.sendAsync(Messages$1.navigateAsync.start(route))
+                : this.broker.sendAsync(Messages$1.navigateWorkloadAsync.start(route));
+        }
+        onNavigate(callback) {
+            return this.broker.listenFor(Messages$1.onNavigate, callback);
+        }
+        onBeforeNavigateAway(callback) {
+            this.broker.listenForAsync(Messages$1.onLeave, (leaveData) => {
+                return callback(leaveData)
+                    .then((result) => Messages$1.onLeave.resolve(Object.assign({}, result)))
+                    .catch((error) => Messages$1.onLeave.reject({ error }));
+            });
+            this.broker.sendAsync(Messages$1.listenLeave.start());
+        }
+        onAfterNavigateAway(callback) {
+            this.broker.listenForAsync(Messages$1.onLeaveEnd, (leaveEndData) => {
+                return callback(leaveEndData)
+                    .then((result) => Messages$1.onLeaveEnd.resolve({ result }))
+                    .catch((error) => Messages$1.onLeaveEnd.reject({ error }));
+            });
+            this.broker.sendAsync(Messages$1.listenLeaveEnd.start());
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class NotificationClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        open(config) {
+            return this.broker.sendAsync(Messages$1.openNotification.start(config));
+        }
+        hide(config) {
+            return this.broker.send(Messages$1.hideNotification(config));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class PageClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        open(config) {
+            return this.broker.sendAsync(Messages$1.openPage.start(config));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class PanelClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        open(config) {
+            return runWithFocusRestoration(() => this.broker.sendAsync(Messages$1.openPanel.start(config)), config.preventFocusRestoration);
+        }
+        close(config) {
+            return this.broker.sendAsync(Messages$1.closePanel.start(config || {}));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class PermissionClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        checkPermissionsOfItem(input) {
+            return this.broker.sendAsync(Messages$1.checkPermissionsOfItem.start(input));
+        }
+        checkPermissionsOfWorkspace(input) {
+            return this.broker.sendAsync(Messages$1.checkPermissionsOfWorkspace.start(input));
+        }
+        getPermissionsOfItem(input) {
+            return this.broker.sendAsync(Messages$1.getPermissionsOfItem.start(input));
+        }
+        getPermissionsOfItemByUser(input) {
+            return this.broker.sendAsync(Messages$1.getPermissionsOfItemByUser.start(input));
+        }
+        getPermissionsOfWorkspace(input) {
+            return this.broker.sendAsync(Messages$1.getPermissionsOfWorkspace.start(input));
+        }
+        openItemSharingDialog(config) {
+            return this.broker.send(Messages$1.openItemSharingDialog(config));
+        }
+        openItemSharingDialogWithResult(config) {
+            return this.broker.sendAsync(Messages$1.openItemSharingDialogWithResult.start(config));
+        }
+        checkItemSharingEnabled(input) {
+            return this.broker.sendAsync(Messages$1.checkItemSharingEnabled.start(input));
+        }
+        getItemTypeShareablePermissions(input) {
+            return this.broker.sendAsync(Messages$1.getItemTypeShareablePermissions.start(input));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class SettingsClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        get() {
+            return this.broker.sendAsync(Messages$1.getSettings.start());
+        }
+        onChange(callback) {
+            return this.broker.listenFor(Messages$1.onSettingsChange, callback);
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    const SHARED_STATE_KEY = Symbol.for('SHARED_STATE');
+    /** @internal */
+    class StateClient {
+        constructor(metaFactory, config) {
+            this.metaFactory = metaFactory;
+            this.config = config;
+        }
+        get sharedState() {
+            if (this._sharedState) {
+                return this._sharedState;
+            }
+            const meta = this.metaFactory();
+            const worker = getWorker(meta, this.config.workloadHostWindow.frames);
+            if (!worker) {
+                throw new Error(`Cannot find the worker frame of ${meta.workloadName}`);
+            }
+            if (!worker[SHARED_STATE_KEY]) {
+                Object.defineProperty(worker, SHARED_STATE_KEY, {
+                    value: {},
+                    writable: false,
+                    enumerable: false,
+                    configurable: false,
+                });
+            }
+            return (this._sharedState = worker[SHARED_STATE_KEY]);
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class SubfolderClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        openSubfolderPickerDialog(config) {
+            return this.broker.sendAsync(Messages$1.openSubfolderPickerDialog.start(config));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class ThemeClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        get() {
+            return this.broker.sendAsync(Messages$1.getTheme.start());
+        }
+        onChange(callback) {
+            return this.broker.listenFor(Messages$1.onThemeChange, callback);
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    class FavoriteClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        favoriteItem(input) {
+            return this.broker.sendAsync(Messages$1.favoriteItem.start(input));
+        }
+        unFavoriteItem(input) {
+            return this.broker.sendAsync(Messages$1.unFavoriteItem.start(input));
+        }
+        getItemFavoriteState(input) {
+            return this.broker.sendAsync(Messages$1.getItemFavoriteState.start(input));
+        }
+        onItemFavoriteStateChange(input, callback) {
+            let subId;
+            this.broker.listenFor(Messages$1.onItemFavoriteStateChange, ({ subscriptionId, changes }) => {
+                if (subscriptionId === subId) {
+                    const item = changes.find(change => change.itemObjectId === input.itemObjectId);
+                    if (item) {
+                        callback({ favorited: item.favorited });
+                    }
+                }
+            });
+            return this.broker.sendAsync(Messages$1.subscribeItemFavoriteStateChange.start(input)).then(({ subscriptionId }) => {
+                subId = subscriptionId;
+                return {
+                    unsubscribe: () => {
+                        subId = undefined;
+                        this.broker.send(Messages$1.unSubscribeItemFavoriteStateChange({ subscriptionId }));
+                    },
+                };
+            });
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /** @internal */
+    let WorkloadClient$1 = class WorkloadClient {
+        constructor(config = DefaultWorkloadClientConfig) {
+            this.config = config;
+            this.broker = createWorkloadClientMessageBroker({ getIframeId: () => this.meta.iframeId, workloadHostWindow: this.config.workloadHostWindow });
+            /** @internal */
+            this._errorHandling = new _ErrorHandlingClient(this.broker);
+            /** @internal */
+            this._interaction = new _InteractionClient(this.broker);
+            /** @internal */
+            this._performanceItems = new _PerformanceItemsClient(this.broker);
+            /** @internal */
+            this._telemetry = new _TelemetryClient(this.broker);
+            /** @internal */
+            this.auth = new AuthClient$1(this.broker);
+            /** @internal */
+            this._worker = new _WorkerClient(() => this.meta, this.config);
+            this.action = new ActionClient(this.broker);
+            this.itemRecentRuns = new ItemRecentRunsClient(this.broker);
+            this.itemSettings = new ItemSettingsClient(this.broker);
+            this.dialog = new DialogClient(this.broker);
+            this.datahub = new DatahubClient(this.broker);
+            this.errorHandling = new ErrorHandlingClient(this.broker);
+            this.event = new EventClient(this.broker);
+            this.favorite = new FavoriteClient(this.broker);
+            this.navigation = new NavigationClient(this.broker);
+            this.notification = new NotificationClient(this.broker);
+            this.page = new PageClient(this.broker);
+            this.panel = new PanelClient(this.broker);
+            this.permission = new PermissionClient(this.broker);
+            this.settings = new SettingsClient(this.broker);
+            this.state = new StateClient(() => this.meta, this.config);
+            this.subfolder = new SubfolderClient(this.broker);
+            this.theme = new ThemeClient(this.broker);
+            if (!config.workloadHostWindow) {
+                throw new Error('Create workload client failed: empty workload host window');
+            }
+        }
+        get meta() {
+            return WorkloadMetaLoader.Load();
+        }
+    };
+
+    const CLIENT_VERSION$1 = '1.17.21';
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /*
+     * Background:
+     * 1.Datapipeline team use es6 while other teams use es5 online
+     * 2.Bowser lib use export default and the compile is not compatible with es6
+     * Solution:
+     * 1. Use import * as bowser from 'bowser' and bowser? to compatible while the bowser is undifined after compile
+     * Notice:
+     * 1. Why don't use import bowser from 'bowser' lib? Because it need add compileOption esModuleInterop and allowSyntheticDefaultImports,
+     * and need to modify the compile, not make sence.
+     * 2. Don't use import { getParser } from 'bowser' which will lead to a regression -- let Datapipeline compile error
+     */
+    /** @internal */
+    function populateWorkloadLoadPerformanceTelemetry(workloadIframePerformance) {
+        var _a;
+        const { clientVersion, workloadName, iframeId, workloadBootstrapStartTimestamp, workloadBootstrapEndTimestamp } = workloadIframePerformance;
+        const navigator = window.navigator;
+        const navigatorConnection = (_a = window.navigator) === null || _a === void 0 ? void 0 : _a.connection;
+        const performanceNavigationTiming = (window.performance.getEntriesByType("navigation"))[0];
+        const { connectEnd, connectStart, decodedBodySize, domContentLoadedEventEnd, domContentLoadedEventStart, domInteractive, domainLookupEnd, domainLookupStart, duration, encodedBodySize, entryType, fetchStart, loadEventEnd, nextHopProtocol, redirectCount, redirectEnd, redirectStart, requestStart, responseStart, responseEnd, secureConnectionStart, transferSize, unloadEventEnd, unloadEventStart, } = performanceNavigationTiming;
+        // Use bowser? to compatible with es6
+        const browser = (bowser__namespace === null || bowser__namespace === void 0 ? void 0 : bowser__namespace.getParser) ? bowser__namespace.getParser(navigator.userAgent) : undefined;
+        const windowPerformanceTimeOrigin = window.performance.timeOrigin;
+        return Object.assign(Object.assign({}, buildBaseEvent(clientVersion)), { workloadName, eventName: "WorkloadLoad", iframeId, 
+            // cdnEnabled: !!(window as any).useCDN, // Update this with global setting if this doesn't depend on workload specific setting
+            compressionSavings: (transferSize && decodedBodySize) ? Math.round((1 - (transferSize / decodedBodySize)) * 100) : -1, decodedBodySize: decodedBodySize !== null && decodedBodySize !== void 0 ? decodedBodySize : -1, deviceMemory: navigator.deviceMemory || 0, dnsLookupDuration: Math.ceil(domainLookupEnd - domainLookupStart), dnsPersistentConnectionOrCached: fetchStart === domainLookupStart && fetchStart === domainLookupEnd, documentLoadDuration: Math.ceil(windowPerformanceTimeOrigin + loadEventEnd - windowPerformanceTimeOrigin + fetchStart), documentLoadEndTimestamp: new Date(Math.ceil(windowPerformanceTimeOrigin + loadEventEnd)).toISOString(), documentLoadStartTimestamp: new Date(Math.ceil(windowPerformanceTimeOrigin + fetchStart)).toISOString(), domContentLoadedDuration: Math.ceil(windowPerformanceTimeOrigin + domContentLoadedEventEnd - windowPerformanceTimeOrigin + domContentLoadedEventStart), effectiveBandwidth: navigatorConnection === null || navigatorConnection === void 0 ? void 0 : navigatorConnection.downlink, effectiveConnectionType: navigatorConnection === null || navigatorConnection === void 0 ? void 0 : navigatorConnection.effectiveType, effectiveRoundTripTime: navigatorConnection === null || navigatorConnection === void 0 ? void 0 : navigatorConnection.rtt, encodedBodySize: encodedBodySize !== null && encodedBodySize !== void 0 ? encodedBodySize : -1, hardwareConcurrency: navigator.hardwareConcurrency, isHttp2: nextHopProtocol === "http/2", workloadBootstrapLoadDuration: Math.ceil(workloadBootstrapEndTimestamp - workloadBootstrapStartTimestamp), workloadBootstrapLoadEndTimestamp: new Date(Math.ceil(windowPerformanceTimeOrigin + workloadBootstrapEndTimestamp)).toISOString(), workloadBootstrapLoadStartTimestamp: new Date(Math.ceil(windowPerformanceTimeOrigin + workloadBootstrapStartTimestamp)).toISOString(), navigationType: entryType, redirectCount, redirectDocumentDuration: Math.ceil(((windowPerformanceTimeOrigin + redirectEnd) - (windowPerformanceTimeOrigin + redirectStart))), requestDuration: Math.ceil(((windowPerformanceTimeOrigin + responseStart) - (windowPerformanceTimeOrigin + requestStart))), responseDuration: Math.ceil(((windowPerformanceTimeOrigin + responseEnd) - (windowPerformanceTimeOrigin + responseStart))), screenHeight: window.screen.height, screenWidth: window.screen.width, sslNegotiationDuration: Math.ceil(((windowPerformanceTimeOrigin + requestStart) - (windowPerformanceTimeOrigin + secureConnectionStart))), tcpConnectionSetupDuration: Math.ceil(((windowPerformanceTimeOrigin + connectEnd) - (windowPerformanceTimeOrigin + connectStart))), timeToFirstByte: Math.ceil(((windowPerformanceTimeOrigin + responseStart) - (windowPerformanceTimeOrigin + fetchStart))), timeToLastByte: Math.ceil(((windowPerformanceTimeOrigin + responseEnd) - (windowPerformanceTimeOrigin + fetchStart))), timeToInteractiveDom: domInteractive, transferSize: transferSize !== null && transferSize !== void 0 ? transferSize : -1, unloadDocumentDuration: Math.ceil((unloadEventEnd - unloadEventStart)), visualViewportHeight: window.outerHeight, visualViewportWidth: window.outerWidth });
+        function buildBaseEvent(clientVersion) {
+            var _a, _b, _c, _d;
+            return {
+                browserName: (_a = browser === null || browser === void 0 ? void 0 : browser.getBrowserName()) !== null && _a !== void 0 ? _a : '',
+                browserVersion: (_b = browser === null || browser === void 0 ? void 0 : browser.getBrowserVersion()) !== null && _b !== void 0 ? _b : '',
+                operatingSystemName: (_c = browser === null || browser === void 0 ? void 0 : browser.getOSName()) !== null && _c !== void 0 ? _c : '',
+                operatingSystemVersion: (_d = browser === null || browser === void 0 ? void 0 : browser.getOSVersion()) !== null && _d !== void 0 ? _d : '',
+                userAgent: window.navigator.userAgent,
+                durationMs: Math.ceil(duration),
+                eventId: uuid__namespace.v4(),
+                level: "Informational" /* Level.Informational */,
+                logAnalyticsCategory: "Report User Action" /* LogAnalyticsCategory.ReportUserAction */,
+                pageHidden: !!window.document.hidden,
+                sessionSource: "Fabric" /* SessionSource.Fabric */,
+                status: "Succeeded" /* Status.Succeeded */,
+                timeGenerated: new Date(Math.ceil(windowPerformanceTimeOrigin + fetchStart)).toISOString(),
+                clientVersion,
+                consumptionMethod: "Fabric Web App" /* ConsumptionMethod.FabricWebApp */,
+                online: true,
+                operationEndTime: new Date(Math.floor(windowPerformanceTimeOrigin + loadEventEnd)).toISOString(),
+                operationStartTime: new Date(Math.floor(windowPerformanceTimeOrigin + fetchStart)).toISOString(),
+                operationName: "WorkloadLoad",
+                operationVersion: "1.0.0",
+            };
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    const maxResoureceTimingsNum = 20;
+    /** @internal */
+    function getWorkloadPerformance(workloadIframePerformance) {
+        var _a, _b, _c, _d;
+        const { workloadBootstrapStart, workloadBootstrapEnd } = workloadIframePerformance;
+        const navigator = window.navigator;
+        const navigatorConnection = navigator === null || navigator === void 0 ? void 0 : navigator.connection;
+        const performanceNavigationTiming = (window.performance.getEntriesByType("navigation"))[0];
+        const { connectEnd, connectStart, decodedBodySize, domContentLoadedEventEnd, domContentLoadedEventStart, domInteractive, domainLookupEnd, domainLookupStart, encodedBodySize, entryType, fetchStart, loadEventStart, loadEventEnd, nextHopProtocol, redirectCount, redirectEnd, redirectStart, requestStart, responseStart, responseEnd, secureConnectionStart, transferSize, unloadEventEnd, unloadEventStart, } = performanceNavigationTiming;
+        const performanceResourceTimings = (window.performance.getEntriesByType("resource"));
+        const workloadResourceTimings = performanceResourceTimings.map(performanceResourceTiming => {
+            var _a;
+            return {
+                fetchStart: String(Math.round(performanceResourceTiming.fetchStart)),
+                initiatorType: performanceResourceTiming.initiatorType,
+                name: performanceResourceTiming.name,
+                requestStart: String(Math.round(performanceResourceTiming.requestStart)),
+                responseStart: String(Math.round(performanceResourceTiming.responseStart)),
+                responseEnd: String(Math.round(performanceResourceTiming.responseEnd)),
+                transferSize: String(Math.round((_a = performanceResourceTiming.transferSize) !== null && _a !== void 0 ? _a : -1)),
+            };
+        });
+        const workloadResourceTimingsNum = workloadResourceTimings.length;
+        // keep the workloadResourceTimings less than maxResoureceTimingsNum and return the max perf cost Timings; else will be trunked by telemetry service
+        if (workloadResourceTimings.length > maxResoureceTimingsNum) {
+            workloadResourceTimings.sort((resourceTiming1, resourceTiming2) => {
+                return (Number(resourceTiming2.responseEnd) - Number(resourceTiming2.requestStart)) - (Number(resourceTiming1.responseEnd) - Number(resourceTiming1.requestStart));
+            });
+            workloadResourceTimings.splice(maxResoureceTimingsNum);
+        }
+        const windowPerformanceTimeOrigin = window.performance.timeOrigin;
+        // Use bowser? to compatible with es6
+        const browser = (bowser__namespace === null || bowser__namespace === void 0 ? void 0 : bowser__namespace.getParser) ? bowser__namespace.getParser(navigator.userAgent) : undefined;
+        return {
+            connectEnd: String(Math.round(connectEnd)),
+            connectStart: String(Math.round(connectStart)),
+            decodedBodySize: String(decodedBodySize !== null && decodedBodySize !== void 0 ? decodedBodySize : -1),
+            domContentLoadedEventEnd: String(Math.round(domContentLoadedEventEnd)),
+            domContentLoadedEventStart: String(Math.round(domContentLoadedEventStart)),
+            domInteractive: String(Math.round(domInteractive)),
+            domainLookupEnd: String(Math.round(domainLookupEnd)),
+            domainLookupStart: String(Math.round(domainLookupStart)),
+            encodedBodySize: String(encodedBodySize !== null && encodedBodySize !== void 0 ? encodedBodySize : -1),
+            entryType: entryType,
+            fetchStart: String(Math.round(fetchStart)),
+            loadEventStart: String(Math.round(loadEventStart)),
+            loadEventEnd: String(Math.round(loadEventEnd)),
+            nextHopProtocol,
+            redirectCount: String(redirectCount),
+            redirectEnd: String(Math.round(redirectEnd)),
+            redirectStart: String(Math.round(redirectStart)),
+            requestStart: String(Math.round(requestStart)),
+            responseStart: String(Math.round(responseStart)),
+            responseEnd: String(Math.round(responseEnd)),
+            secureConnectionStart: String(Math.round(secureConnectionStart)),
+            transferSize: String(transferSize !== null && transferSize !== void 0 ? transferSize : -1),
+            unloadEventEnd: String(Math.round(unloadEventEnd)),
+            unloadEventStart: String(Math.round(unloadEventStart)),
+            timeOrigin: String(Math.round(windowPerformanceTimeOrigin)),
+            deviceMemory: String(navigator.deviceMemory || 0),
+            downlink: String(navigatorConnection === null || navigatorConnection === void 0 ? void 0 : navigatorConnection.downlink),
+            effectiveType: String(navigatorConnection === null || navigatorConnection === void 0 ? void 0 : navigatorConnection.effectiveType),
+            hardwareConcurrency: String(navigator.hardwareConcurrency),
+            rtt: String(navigatorConnection === null || navigatorConnection === void 0 ? void 0 : navigatorConnection.rtt),
+            userAgent: navigator.userAgent,
+            browserName: (_a = browser === null || browser === void 0 ? void 0 : browser.getBrowserName()) !== null && _a !== void 0 ? _a : '',
+            browserVersion: (_b = browser === null || browser === void 0 ? void 0 : browser.getBrowserVersion()) !== null && _b !== void 0 ? _b : '',
+            operatingSystemName: (_c = browser === null || browser === void 0 ? void 0 : browser.getOSName()) !== null && _c !== void 0 ? _c : '',
+            operatingSystemVersion: (_d = browser === null || browser === void 0 ? void 0 : browser.getOSVersion()) !== null && _d !== void 0 ? _d : '',
+            workloadBootstrapEnd: String(Math.round(workloadBootstrapEnd)),
+            workloadBootstrapStart: String(Math.round(workloadBootstrapStart)),
+            performanceResourceTimings: JSON.stringify(workloadResourceTimings),
+            performanceResourceTimingsNum: String(workloadResourceTimingsNum),
+        };
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description
+     * Every workload app needs to support being loaded in two modes:
+     * - **UI mode**: App in UI mode is loaded in visible IFrames and listens for its own route changes
+     * to render corresponding UI components, including pages, panels, dialogs, and so on.
+     * - **Worker mode**: App in worker mode runs in an invisible IFrame, which is mainly used to receive
+     * commands sent from the outside world and respond to them.
+     *
+     * The bootstrap() method is to simplify the initialization steps. The bootstrap() method internally
+     * detects whether the current App is loaded in UI mode or worker mode, and then call the appropriate
+     * initialization method (initializeUI vs. initializeWorker). After the initialization is complete,
+     * it notifies Fabric micro-frontend framework of the initialization success or failure.
+     *
+     * @returns promise which resolves when the initialization is complete.
+     */
+    function bootstrap(config) {
+        var _a;
+        return tslib.__awaiter(this, void 0, void 0, function* () {
+            const { iframeType, environmentName, iframeId, workloadName, bootstrapPath, cdnFallbackTime, parallelLoadingEnabled } = WorkloadMetaLoader.Load();
+            const client = new WorkloadClient$1({
+                workloadHostWindow: (_a = config.workloadHostWindow) !== null && _a !== void 0 ? _a : DefaultWorkloadClientConfig.workloadHostWindow
+            });
+            const params = {
+                environmentName,
+                bootstrapPath: bootstrapPath ? (bootstrapPath.startsWith('/') ? bootstrapPath : `/${bootstrapPath}`) : null,
+            };
+            window.performance.mark("FabricWorkloadBootstrapLoadStartTimestamp");
+            try {
+                const workIFrameState = yield client._worker.workIFrameState;
+                if (iframeType === 'worker') {
+                    yield config.initializeWorker(params);
+                    if (parallelLoadingEnabled) {
+                        workIFrameState['initState'] = 'succeeded';
+                        if (workIFrameState['callbacks']) {
+                            Object.values(workIFrameState['callbacks']).map(iframeCallback => {
+                                if (typeof iframeCallback === 'function') {
+                                    iframeCallback();
+                                }
+                            });
+                        }
+                    }
+                }
+                else {
+                    if (!parallelLoadingEnabled || workIFrameState['initState'] === 'succeeded') {
+                        yield config.initializeUI(params);
+                    }
+                    else {
+                        yield new Promise((resolve) => {
+                            if (!workIFrameState['callbacks']) {
+                                workIFrameState['callbacks'] = {};
+                            }
+                            workIFrameState['callbacks'][iframeType] = (() => tslib.__awaiter(this, void 0, void 0, function* () {
+                                yield config.initializeUI(params);
+                                resolve();
+                            }));
+                        });
+                    }
+                    client._interaction.onResetFocus((config) => {
+                        const allTabbable = document.body.querySelectorAll('input, select, textarea, button, [href], [tabindex]:not([tabindex="-1"])');
+                        if (allTabbable.length > 0) {
+                            if (config.index === 'first') {
+                                allTabbable[0].focus();
+                            }
+                            else {
+                                allTabbable[allTabbable.length - 1].focus();
+                            }
+                        }
+                    });
+                    if (iframeType === 'page' || iframeType === 'panel') {
+                        window.performance.mark("FabricWorkloadBootstrapLoadEndTimestamp");
+                        const workloadBootstrapStartTimeMarker = window.performance.getEntriesByName("FabricWorkloadBootstrapLoadStartTimestamp", "mark");
+                        const workloadBootstrapEndTimeMarker = window.performance.getEntriesByName("FabricWorkloadBootstrapLoadEndTimestamp", "mark");
+                        const workloadBootstrapStartTimestamp = (workloadBootstrapStartTimeMarker === null || workloadBootstrapStartTimeMarker === void 0 ? void 0 : workloadBootstrapStartTimeMarker.length) > 0 ? workloadBootstrapStartTimeMarker[0].startTime : 0;
+                        const workloadBootstrapEndTimestamp = (workloadBootstrapEndTimeMarker === null || workloadBootstrapEndTimeMarker === void 0 ? void 0 : workloadBootstrapEndTimeMarker.length) > 0 ? workloadBootstrapEndTimeMarker[0].startTime : 0;
+                        client._telemetry.logEvent({
+                            name: exports.WorkloadLoadEventType.WorkloadBootstrap,
+                            properties: populateWorkloadLoadPerformanceTelemetry({
+                                workloadBootstrapStartTimestamp,
+                                workloadBootstrapEndTimestamp,
+                                clientVersion: CLIENT_VERSION$1,
+                                workloadName,
+                                iframeId,
+                            })
+                        });
+                        client._interaction.onQueryDomRect((config) => {
+                            const { selector, setFocus } = config;
+                            let target;
+                            if (selector) {
+                                target = document.querySelector(selector);
+                            }
+                            if (!target || !selector) {
+                                return Promise.resolve({ isSucceed: false });
+                            }
+                            else {
+                                const rect = target.getBoundingClientRect();
+                                if (setFocus) {
+                                    target.focus();
+                                }
+                                return Promise.resolve({
+                                    isSucceed: true,
+                                    rect
+                                });
+                            }
+                        });
+                    }
+                    registerDocumentEventListeners(client);
+                }
+                client._errorHandling.registerUnhandledExceptionHandler({ iframe: iframeType });
+                try {
+                    client._performanceItems.init();
+                }
+                catch (e) {
+                    client._telemetry.logEvent({
+                        name: 'PerformanceItemsClientInitFailed',
+                        properties: { errorName: e === null || e === void 0 ? void 0 : e.name, errorMessage: e === null || e === void 0 ? void 0 : e.message },
+                    });
+                }
+                const workloadBootstrapStartTimeMarker = window.performance.getEntriesByName("FabricWorkloadBootstrapLoadStartTimestamp", "mark");
+                const workloadBootstrapStart = (workloadBootstrapStartTimeMarker === null || workloadBootstrapStartTimeMarker === void 0 ? void 0 : workloadBootstrapStartTimeMarker.length) > 0 ? workloadBootstrapStartTimeMarker[0].startTime : 0;
+                const workloadBootstrapEnd = Date.now() - window.performance.timeOrigin;
+                client._telemetry.postLifecycleEvent({
+                    name: exports.LifecycleEventType.InitSucceeded,
+                    properties: Object.assign({ clientVersion: CLIENT_VERSION$1, iframeType,
+                        iframeId,
+                        workloadName, isCDNFallback: cdnFallbackTime != null }, getWorkloadPerformance({ workloadBootstrapStart, workloadBootstrapEnd }))
+                });
+            }
+            catch (error) {
+                client._telemetry.postLifecycleEvent({
+                    name: exports.LifecycleEventType.InitFailed,
+                    properties: {
+                        error: String(error),
+                        clientVersion: CLIENT_VERSION$1,
+                        isCDNFallback: cdnFallbackTime != null,
+                    },
+                });
+            }
+            finally {
+                flushEventAndInit(client);
+                postCDNFallbackMessage(client, workloadName, cdnFallbackTime);
+            }
+        });
+    }
+    function registerDocumentEventListeners(client) {
+        document.addEventListener('click', (event) => {
+            client._interaction.postDOMEvent({ eventType: event.type });
+        });
+        document.addEventListener('keydown', (event) => {
+            client._interaction.postDOMEvent({
+                eventType: event.type,
+                eventProps: {
+                    key: event.key
+                }
+            });
+        });
+        document.addEventListener('keyup', (event) => {
+            client._interaction.postDOMEvent({
+                eventType: event.type,
+                eventProps: {
+                    key: event.key
+                }
+            });
+        });
+    }
+    function flushEventAndInit(client) {
+        let cachedEvents = [];
+        try {
+            const cachedEventsJSON = sessionStorage.getItem('cachedEvents');
+            if (cachedEventsJSON) {
+                cachedEvents = JSON.parse(cachedEventsJSON);
+            }
+        }
+        catch (exception) {
+            client._telemetry.logEvent({
+                name: 'ParseCachedEventsFailed',
+                properties: { error: String(exception) }
+            });
+        }
+        for (const event of cachedEvents) {
+            client._telemetry.logEvent(event);
+        }
+        try {
+            sessionStorage.removeItem('cachedEvents');
+        }
+        catch (exception) {
+            console.error(exception);
+        }
+        window.logEvent = client._telemetry.logEvent.bind(client._telemetry);
+    }
+    function postCDNFallbackMessage(client, workloadName, cdnFallbackTime) {
+        if (cdnFallbackTime) {
+            client._telemetry.postCdnFallbackEvent({
+                workloadName: workloadName,
+                timestamp: cdnFallbackTime !== null && cdnFallbackTime !== void 0 ? cdnFallbackTime : Date.now().toString(),
+            });
+        }
+    }
+
+    const THEME_ATTRIBUTE = 'data-theme';
+    const STYLE_ELEMENT_ID = "theme-styles";
+    const defaultOptions = {
+        enableThemeGlobally: true
+    };
+    /**
+     * CssVariableThemeProvider loads themes from json. Writes json themes into the dom as css variables. It can return the theme object to consumers
+     */
+    class CssVariableThemeProvider {
+        constructor() {
+            this.styleElement = document.createElement('style');
+            this.styleElement.id = STYLE_ELEMENT_ID;
+            document.head.appendChild(this.styleElement);
+        }
+        provideTheme(theme, options = defaultOptions) {
+            let styles = this.buildCSSVarList(theme.tokens);
+            styles += this.buildCSSColorScheme(theme);
+            const stylesheetContents = this.createStyleSheet(styles, theme.name);
+            this.styleElement.textContent = stylesheetContents;
+            if (options.enableThemeGlobally)
+                this.enableThemeGlobally(theme.name);
+        }
+        enableThemeGlobally(themeName) {
+            window.document.documentElement.setAttribute(THEME_ATTRIBUTE, themeName);
+        }
+        createStyleSheet(styles, themeName) {
+            return `
+[data-theme="${themeName}"] {
+    ${styles}
+}
+`;
+        }
+        buildCSSVarList(tokens) {
+            let styles = '';
+            for (const [key, value] of Object.entries(tokens)) {
+                styles += `--${key}: ${value};\n`;
+            }
+            return styles;
+        }
+        buildCSSColorScheme(theme) {
+            return `color-scheme: ${theme.colorScheme};\n`;
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description An array of all valid Power BI item types.
+     */
+    /**
+     * @description An enum of all valid provision states
+     */
+    exports.ProvisionStateEnum = void 0;
+    (function (ProvisionStateEnum) {
+        ProvisionStateEnum[ProvisionStateEnum["InProgress"] = 0] = "InProgress";
+        ProvisionStateEnum[ProvisionStateEnum["Active"] = 1] = "Active";
+        ProvisionStateEnum[ProvisionStateEnum["Failed"] = 20] = "Failed";
+        ProvisionStateEnum[ProvisionStateEnum["Deleting"] = 21] = "Deleting";
+        ProvisionStateEnum[ProvisionStateEnum["DisabledByDeprovisioning"] = 30] = "DisabledByDeprovisioning";
+        ProvisionStateEnum[ProvisionStateEnum["DeprovisioningFailed"] = 31] = "DeprovisioningFailed";
+        ProvisionStateEnum[ProvisionStateEnum["DeletedByDeprovision"] = 32] = "DeletedByDeprovision";
+    })(exports.ProvisionStateEnum || (exports.ProvisionStateEnum = {}));
+    /**
+     * @description An enum of all valid payload content types
+     */
+    exports.PayloadContentTypeEnum = void 0;
+    (function (PayloadContentTypeEnum) {
+        PayloadContentTypeEnum[PayloadContentTypeEnum["InlineJson"] = 0] = "InlineJson";
+        PayloadContentTypeEnum[PayloadContentTypeEnum["InlinePlainText"] = 1] = "InlinePlainText";
+        PayloadContentTypeEnum[PayloadContentTypeEnum["InlineXml"] = 2] = "InlineXml";
+        PayloadContentTypeEnum[PayloadContentTypeEnum["InlineBase64"] = 3] = "InlineBase64";
+    })(exports.PayloadContentTypeEnum || (exports.PayloadContentTypeEnum = {}));
+    /**
+     * @description An enum of all valid item relation settings
+     */
+    exports.ItemRelationSettings = void 0;
+    (function (ItemRelationSettings) {
+        ItemRelationSettings[ItemRelationSettings["Association"] = 0] = "Association";
+        ItemRelationSettings[ItemRelationSettings["CascadeDelete"] = 1] = "CascadeDelete";
+        ItemRelationSettings[ItemRelationSettings["WeakAssociation"] = 2] = "WeakAssociation";
+        ItemRelationSettings[ItemRelationSettings["Datasource"] = 3] = "Datasource";
+        ItemRelationSettings[ItemRelationSettings["PushData"] = 4] = "PushData";
+        ItemRelationSettings[ItemRelationSettings["Orchestration"] = 5] = "Orchestration";
+        ItemRelationSettings[ItemRelationSettings["Shortcut"] = 6] = "Shortcut";
+        ItemRelationSettings[ItemRelationSettings["HiddenInWorkspace"] = 7] = "HiddenInWorkspace";
+    })(exports.ItemRelationSettings || (exports.ItemRelationSettings = {}));
+    /**
+     * @description An enum of all methods to apply a label
+     */
+    exports.TriggerType = void 0;
+    (function (TriggerType) {
+        TriggerType[TriggerType["Manual"] = 1] = "Manual";
+        TriggerType[TriggerType["InheritanceUponCreation"] = 2] = "InheritanceUponCreation";
+        TriggerType[TriggerType["Publish"] = 3] = "Publish";
+        TriggerType[TriggerType["DownstreamInheritanceBySystem"] = 4] = "DownstreamInheritanceBySystem";
+        TriggerType[TriggerType["DownstreamInheritanceByUser"] = 5] = "DownstreamInheritanceByUser";
+        TriggerType[TriggerType["InheritanceFromDataSource"] = 6] = "InheritanceFromDataSource";
+        TriggerType[TriggerType["Alm"] = 7] = "Alm";
+        TriggerType[TriggerType["PublicApiPrivileged"] = 8] = "PublicApiPrivileged";
+        TriggerType[TriggerType["PublicApiStandard"] = 9] = "PublicApiStandard";
+        TriggerType[TriggerType["DefaultLabelPolicy"] = 10] = "DefaultLabelPolicy";
+    })(exports.TriggerType || (exports.TriggerType = {}));
+
+    // -----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    // -----------------------------------------------------------------------
+    /**
+     * @description An enum of all valid item types that support the Most Recently Used (MRU) feature
+     */
+    var MRUItemType;
+    (function (MRUItemType) {
+        MRUItemType[MRUItemType["Dashboards"] = 0] = "Dashboards";
+        MRUItemType[MRUItemType["Reports"] = 1] = "Reports";
+        MRUItemType[MRUItemType["Workbooks"] = 2] = "Workbooks";
+        MRUItemType[MRUItemType["AppInstance"] = 3] = "AppInstance";
+        MRUItemType[MRUItemType["RdlReports"] = 4] = "RdlReports";
+        MRUItemType[MRUItemType["Workspaces"] = 5] = "Workspaces";
+        MRUItemType[MRUItemType["Datasets"] = 6] = "Datasets";
+        MRUItemType[MRUItemType["FabricItem"] = 7] = "FabricItem";
+        MRUItemType[MRUItemType["Datamarts"] = 8] = "Datamarts";
+    })(MRUItemType || (MRUItemType = {}));
+
+    // -----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    // -----------------------------------------------------------------------
+    /**
+     * @description An enum type of all valid schedule types after serialization
+     */
+    var ScheduleTypeWire;
+    (function (ScheduleTypeWire) {
+        ScheduleTypeWire[ScheduleTypeWire["None"] = 0] = "None";
+        ScheduleTypeWire[ScheduleTypeWire["Daily"] = 1] = "Daily";
+        ScheduleTypeWire[ScheduleTypeWire["Cron"] = 2] = "Cron";
+        ScheduleTypeWire[ScheduleTypeWire["Weekly"] = 3] = "Weekly";
+        ScheduleTypeWire[ScheduleTypeWire["CronHours"] = 4] = "CronHours";
+        ScheduleTypeWire[ScheduleTypeWire["Monthly"] = 5] = "Monthly";
+        ScheduleTypeWire[ScheduleTypeWire["RelativeMonthly"] = 6] = "RelativeMonthly";
+    })(ScheduleTypeWire || (ScheduleTypeWire = {}));
+    /**
+     * @description An enum of all valid item job status types
+     */
+    exports.ItemJobStatus = void 0;
+    (function (ItemJobStatus) {
+        /**
+         * @description Job is scheduled or triggered, but not yet started
+         */
+        ItemJobStatus[ItemJobStatus["NotStarted"] = 0] = "NotStarted";
+        /**
+         * @description Job is running
+         */
+        ItemJobStatus[ItemJobStatus["InProgress"] = 1] = "InProgress";
+        /**
+         * @description Job is completed successfully
+         */
+        ItemJobStatus[ItemJobStatus["Completed"] = 2] = "Completed";
+        /**
+         * @description Job is failed because of error
+         */
+        ItemJobStatus[ItemJobStatus["Failed"] = 3] = "Failed";
+        /**
+         * @description Job is cancelled by user
+         */
+        ItemJobStatus[ItemJobStatus["Cancelled"] = 4] = "Cancelled";
+        /**
+         * @description Job could not be found
+         */
+        ItemJobStatus[ItemJobStatus["NotFound"] = 5] = "NotFound";
+        /**
+         * @description Job is duplicated
+         */
+        ItemJobStatus[ItemJobStatus["Duplicate"] = 6] = "Duplicate";
+        ItemJobStatus[ItemJobStatus["OwnerUserMissing"] = 7] = "OwnerUserMissing";
+        /**
+         * @description Job is marked as Deadletter if not started after trigger for N hours
+         */
+        ItemJobStatus[ItemJobStatus["DeadLettered"] = 8] = "DeadLettered";
+        /**
+         * @description This status is used for backwards compatibility and never set
+         */
+        ItemJobStatus[ItemJobStatus["Unknown"] = 9] = "Unknown";
+    })(exports.ItemJobStatus || (exports.ItemJobStatus = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    exports.WorkloadAuthError = void 0;
+    (function (WorkloadAuthError) {
+        /**
+        * @description Indicates that authentication feature is not available.
+        */
+        WorkloadAuthError[WorkloadAuthError["UnsupportedError"] = 0] = "UnsupportedError";
+        /**
+         * @description Indicates that there was a problem with user interaction.
+         */
+        WorkloadAuthError[WorkloadAuthError["UserInteractionFailedError"] = 1] = "UserInteractionFailedError";
+        /**
+         * @description Indicates that there's a problem with the configuration in the workload for authentication (The redirectUri/Audience does not meet the requirements).
+         */
+        WorkloadAuthError[WorkloadAuthError["WorkloadConfigError"] = 2] = "WorkloadConfigError";
+        /**
+         * @description Indicates that there was an unknown error when trying to fetch the token.
+         */
+        WorkloadAuthError[WorkloadAuthError["UnknownError"] = 3] = "UnknownError";
+    })(exports.WorkloadAuthError || (exports.WorkloadAuthError = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    /**
+     * @description The source of the error.
+     */
+    exports.WorkloadErrorSource = void 0;
+    (function (WorkloadErrorSource) {
+        /**
+        * @description Indicates that the error was a system error.
+        */
+        WorkloadErrorSource[WorkloadErrorSource["System"] = 0] = "System";
+        /**
+        * @description Indicates that the error was a user error.
+        */
+        WorkloadErrorSource[WorkloadErrorSource["User"] = 1] = "User";
+        /**
+        * @description Indicates that the error was an external error.
+        */
+        WorkloadErrorSource[WorkloadErrorSource["External"] = 2] = "External";
+    })(exports.WorkloadErrorSource || (exports.WorkloadErrorSource = {}));
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    var WorkloadMessageType;
+    (function (WorkloadMessageType) {
+        WorkloadMessageType["createItem"] = "createItem";
+        WorkloadMessageType["getItem"] = "getItem";
+        WorkloadMessageType["updateItem"] = "updateItem";
+        WorkloadMessageType["deleteItem"] = "deleteItem";
+        WorkloadMessageType["getItemScheduledJobs"] = "getItemScheduledJobs";
+        WorkloadMessageType["createItemScheduledJobs"] = "createItemScheduledJobs";
+        WorkloadMessageType["updateItemScheduledJobs"] = "updateItemScheduledJobs";
+        WorkloadMessageType["runItemJob"] = "runItemJob";
+        WorkloadMessageType["cancelItemJob"] = "cancelItemJob";
+        WorkloadMessageType["getItemJobHistory"] = "getItemJobHistory";
+        WorkloadMessageType["acquireAADToken"] = "acquireAADToken";
+        WorkloadMessageType["resolveEndpoint"] = "resolveEndpoint";
+    })(WorkloadMessageType || (WorkloadMessageType = {}));
+    const createItem = createAsyncWorkloadMessage(WorkloadMessageType.createItem);
+    const getItem = createAsyncWorkloadMessage(WorkloadMessageType.getItem);
+    const updateItem = createAsyncWorkloadMessage(WorkloadMessageType.updateItem);
+    const deleteItem = createAsyncWorkloadMessage(WorkloadMessageType.deleteItem);
+    const getItemScheduledJobs = createAsyncWorkloadMessage(WorkloadMessageType.getItemScheduledJobs);
+    const createItemScheduledJobs = createAsyncWorkloadMessage(WorkloadMessageType.createItemScheduledJobs);
+    const updateItemScheduledJobs = createAsyncWorkloadMessage(WorkloadMessageType.updateItemScheduledJobs);
+    const runItemJob = createAsyncWorkloadMessage(WorkloadMessageType.runItemJob);
+    const cancelItemJob = createAsyncWorkloadMessage(WorkloadMessageType.cancelItemJob);
+    const getItemJobHistory = createAsyncWorkloadMessage(WorkloadMessageType.getItemJobHistory);
+    const acquireAADToken = createAsyncWorkloadMessage(WorkloadMessageType.acquireAADToken);
+    const resolveEndpoint = createAsyncWorkloadMessage(WorkloadMessageType.resolveEndpoint);
+    const Messages = Object.assign(Object.assign({}, Messages$1), { acquireAADToken,
+        createItem,
+        getItem,
+        updateItem,
+        deleteItem,
+        getItemScheduledJobs,
+        createItemScheduledJobs,
+        updateItemScheduledJobs,
+        runItemJob,
+        cancelItemJob,
+        getItemJobHistory,
+        resolveEndpoint });
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    class ItemCrudClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        createItem(params) {
+            return this.broker.sendAsync(Messages.createItem.start(params));
+        }
+        getItem(params) {
+            return this.broker.sendAsync(Messages.getItem.start(params));
+        }
+        updateItem(params) {
+            return this.broker.sendAsync(Messages.updateItem.start(params));
+        }
+        deleteItem(params) {
+            return this.broker.sendAsync(Messages.deleteItem.start(params));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    class ItemScheduleClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        getItemScheduledJobs(objectId) {
+            return this.broker.sendAsync(Messages.getItemScheduledJobs.start({ objectId }));
+        }
+        createItemScheduledJobs(createItemScheduledJobs) {
+            return this.broker.sendAsync(Messages.createItemScheduledJobs.start(createItemScheduledJobs));
+        }
+        updateItemScheduledJobs(updateItemScheduleParams) {
+            return this.broker.sendAsync(Messages.updateItemScheduledJobs.start(updateItemScheduleParams));
+        }
+        runItemJob(jobParams) {
+            return this.broker.sendAsync(Messages.runItemJob.start(jobParams));
+        }
+        cancelItemJob(jobParams) {
+            return this.broker.sendAsync(Messages.cancelItemJob.start(jobParams));
+        }
+        getItemJobHistory(getHistoryParams) {
+            return this.broker.sendAsync(Messages.getItemJobHistory.start(getHistoryParams));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    class AuthClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        acquireAccessToken(params) {
+            return this.broker.sendAsync(Messages.acquireAADToken.start(params));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    class EndpointClient {
+        constructor(broker) {
+            this.broker = broker;
+        }
+        resolveEndpoint(params) {
+            return this.broker.sendAsync(Messages.resolveEndpoint.start(params));
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    // <copyright company="Microsoft Corporation">
+    //        Copyright (c) Microsoft Corporation.  All rights reserved.
+    // </copyright>
+    //-----------------------------------------------------------------------
+    class WorkloadClient {
+        constructor(config = DefaultWorkloadClientConfig) {
+            this.config = config;
+            this.client = new WorkloadClient$1(this.config);
+            this.action = this.client.action;
+            this.itemCrud = new ItemCrudClient(this.broker);
+            this.itemRecentRuns = this.client.itemRecentRuns;
+            this.itemSettings = this.client.itemSettings;
+            this.itemSchedule = new ItemScheduleClient(this.broker);
+            this.auth = new AuthClient(this.broker);
+            this.datahub = this.client.datahub;
+            this.dialog = this.client.dialog;
+            this.endpoint = new EndpointClient(this.broker);
+            this.errorHandling = this.client.errorHandling;
+            this.event = this.client.event;
+            this.favorite = this.client.favorite;
+            this.navigation = this.client.navigation;
+            this.notification = this.client.notification;
+            this.page = this.client.page;
+            this.panel = this.client.panel;
+            this.permission = this.client.permission;
+            this.settings = this.client.settings;
+            this.state = this.client.state;
+            this.subfolder = this.client.subfolder;
+            this.theme = this.client.theme;
+        }
+        get broker() {
+            return this.client.broker;
+        }
+    }
+    /**
+     * @description create an workload client instance.
+     *
+     * @returns the workload client instance
+     *
+     * @param config configuration of the workload client, optional with default config:
+     * - `workloadHostWindow` – A window object - Reference to the workload host window, usefully when workloads have nested frames and use the workload client library in the inner frame - optional with default value to window.parent!.
+     */
+    function createWorkloadClient(config = DefaultWorkloadClientConfig) {
+        return new WorkloadClient(config);
+    }
+
+    // This CLIENT_VERSION will be adjusted and generated correct value during pipeline publish
+    const CLIENT_VERSION = '0.0.1';
+
+    exports.CLIENT_VERSION = CLIENT_VERSION;
+    exports.CssVariableThemeProvider = CssVariableThemeProvider;
+    exports.DefaultWorkloadClientConfig = DefaultWorkloadClientConfig;
+    exports.WorkloadClient = WorkloadClient$1;
+    exports.Messages = Messages$1;
+    exports.PreDefinedEventName = PreDefinedEventName;
+    exports.STYLE_ELEMENT_ID = STYLE_ELEMENT_ID;
+    exports.THEME_ATTRIBUTE = THEME_ATTRIBUTE;
+    exports.bootstrap = bootstrap;
+    exports.createWorkloadClient = createWorkloadClient;
+
+}));
+

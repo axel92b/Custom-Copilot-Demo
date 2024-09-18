@@ -9,14 +9,12 @@
 
 	<ItemGroup>
 		<PackageReference Include="Dumpify" Version="0.6.5" />
-		<PackageReference Include="Microsoft.KernelMemory.Core" Version="0.29.240219.2" />
-		<PackageReference Include="Microsoft.KernelMemory.SemanticKernelPlugin"
-			Version="0.29.240219.2" />
-		<PackageReference Include="Microsoft.SemanticKernel" Version="1.4.0" />
-		<PackageReference Include="Microsoft.SemanticKernel.Planners.Handlebars"
-			Version="1.4.0-preview" />
-		<PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.4.0-alpha" />
-		<PackageReference Include="Microsoft.SemanticKernel.Plugins.Memory" Version="1.4.0-alpha" />
+		<PackageReference Include="Microsoft.KernelMemory.Core" Version="0.73.240906.1" />
+		<PackageReference Include="Microsoft.KernelMemory.SemanticKernelPlugin" Version="0.73.240906.1" />
+		<PackageReference Include="Microsoft.SemanticKernel" Version="1.20.0" />
+		<PackageReference Include="Microsoft.SemanticKernel.Planners.Handlebars" Version="1.20.0-preview" />
+		<PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.20.0-alpha" />
+		<PackageReference Include="Microsoft.SemanticKernel.Plugins.Memory" Version="1.20.0-alpha" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -45,6 +43,18 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="Memories\TestData.txt">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Memories\workload-client.js">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Memories\workload-client.d.ts">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Memories\workload-client.txt">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Memories\workload-client-types.txt">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>

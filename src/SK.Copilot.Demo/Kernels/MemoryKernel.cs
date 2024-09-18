@@ -2,6 +2,7 @@ using Microsoft.Extensions.Azure;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.KernelMemory;
+using Microsoft.KernelMemory.AI.OpenAI;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -22,7 +23,7 @@ public class MemoryKernel : KernelBase
             .AddAzureOpenAIChatCompletion(config.AzureOpenAICompletionDeploymentName, config.AzureOpenAIEndpoint, config.AzureOpenAIKey);
 
         builder.Plugins.AddFromType<TimePlugin>();
-        builder.Plugins.AddFromType<DynamicMemoryLoaderPlugin>();
+        //builder.Plugins.AddFromType<DynamicMemoryLoaderPlugin>();
 
         builder.Services.AddSingleton(KernelMemory);
 
@@ -31,25 +32,27 @@ public class MemoryKernel : KernelBase
 
     public override async Task<IKernelMemory?> CreateMemoryAsync(SKConfig config)
     {
-        var memory = new KernelMemoryBuilder()
-            .WithAzureAISearchMemoryDb(config.AzureSearchEndpoint, config.AzureSearchKey)
-            .WithAzureOpenAITextGeneration(new AzureOpenAIConfig { APIKey = config.AzureOpenAIKey, Endpoint = config.AzureOpenAIEndpoint, Deployment = config.AzureOpenAICompletionDeploymentName, Auth = AzureOpenAIConfig.AuthTypes.APIKey })
-            .WithAzureOpenAITextEmbeddingGeneration(new AzureOpenAIConfig { APIKey = config.AzureOpenAIKey, Endpoint = config.AzureOpenAIEndpoint, Deployment = config.AzureOpenAIEmbeddingDeploymentName, Auth = AzureOpenAIConfig.AuthTypes.APIKey })
+        Memory = new KernelMemoryBuilder()
+            .WithAzureAISearchMemoryDb(new AzureAISearchConfig() { Endpoint = config.AzureSearchEndpoint, APIKey = config.AzureSearchKey, Auth = AzureAISearchConfig.AuthTypes.APIKey, UseHybridSearch = true })
+            .WithAzureOpenAITextGeneration(new AzureOpenAIConfig { APIKey = config.AzureOpenAIKey, Endpoint = config.AzureOpenAIEndpoint, Deployment = config.AzureOpenAICompletionDeploymentName, Auth = AzureOpenAIConfig.AuthTypes.APIKey }, new GPT4oTokenizer())
+            .WithAzureOpenAITextEmbeddingGeneration(new AzureOpenAIConfig { APIKey = config.AzureOpenAIKey, Endpoint = config.AzureOpenAIEndpoint, Deployment = config.AzureOpenAIEmbeddingDeploymentName, Auth = AzureOpenAIConfig.AuthTypes.APIKey }, new GPT4oTokenizer())
             .Build();
 
+        //This will upload all files to Azure Search Service and local memory
+        //Comment if data is already uploaded
         var docLocation = Path.Combine(Directory.GetCurrentDirectory(), "Memories");
         var tasks = Directory
             .GetFiles(docLocation)
             .Select(f => new FileInfo(f))
             .Select(async fileInfo =>
             {
-                await memory.DeleteDocumentAsync(fileInfo.Name);
-                return await memory.ImportDocumentAsync(fileInfo.FullName, documentId: fileInfo.Name);
+                await Memory.DeleteDocumentAsync(fileInfo.Name);
+                return await Memory.ImportDocumentAsync(fileInfo.FullName, documentId: fileInfo.Name);
             });
 
         await Task.WhenAll(tasks);
 
-        return memory;
+        return Memory;
     }
 
     // public override Task<KernelPlugin[]> CreatePluginsAsync(Kernel kernel)
@@ -67,7 +70,7 @@ public class MemoryKernel : KernelBase
     {
         var settings = new OpenAIPromptExecutionSettings
         {
-            ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions,
+            ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
         };
 
         var completionService = kernel.GetRequiredService<IChatCompletionService>();
@@ -75,6 +78,13 @@ public class MemoryKernel : KernelBase
         if (_chatHistory.Count > 10)
         {
             _chatHistory.RemoveRange(0, 5);
+        }
+
+        var searchResult = await Memory.AskAsync(userPrompt, minRelevance: 0, index: "default");
+
+        if (!searchResult.NoResult)
+        {
+            userPrompt = $"Using this: {searchResult.Result} \nAnswer this: {userPrompt}";
         }
 
         _chatHistory.AddUserMessage(userPrompt);

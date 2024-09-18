@@ -13,8 +13,8 @@ public abstract class KernelBase : IDemo
 
     public Dictionary<string, KernelPlugin> Plugins => _plugins;
 
-    private IKernelMemory? _memory;
-    public IKernelMemory KernelMemory => _memory!;
+    protected IKernelMemory? Memory;
+    public IKernelMemory KernelMemory => Memory!;
 
     public KernelBase()
     {
@@ -23,7 +23,7 @@ public abstract class KernelBase : IDemo
 
     public async Task InitializeAsync(SKConfig config)
     {
-        _memory = await CreateMemoryAsync(config);
+        Memory = await CreateMemoryAsync(config);
         _kernel = CreateKernel(config);
         _plugins = (await CreatePluginsAsync(_kernel!)).ToDictionary(p => p.Name);
     }

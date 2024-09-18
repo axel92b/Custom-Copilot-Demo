@@ -14,11 +14,11 @@ public class DynamicMemoryLoaderPlugin
         _kernelMemory = kernelMemory;
     }
 
-    [KernelFunction, Description("Load memories and data")]
+    [KernelFunction("get_additional_info"), Description("Contains additional info for any user query or question")]
     public async Task<string> LoadDoc([Description("The full query of the user")] string userQuery)
     {
         $"Loading memory according to {userQuery}".Dump();
-        var result = await _kernelMemory.AskAsync(userQuery, minRelevance: 0.7, index:"default");
+        var result = await _kernelMemory.AskAsync(userQuery, minRelevance: 0, index: "default");
         return result.Result;
     }
 }
