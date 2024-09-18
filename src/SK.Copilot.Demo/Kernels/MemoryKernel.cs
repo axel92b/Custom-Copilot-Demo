@@ -7,6 +7,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Plugins.Core;
+using Elastic.Clients.Elasticsearch;
 
 namespace Demo;
 
@@ -40,7 +41,7 @@ public class MemoryKernel : KernelBase
 
         //This will upload all files to Azure Search Service and local memory
         //Comment if data is already uploaded
-        var docLocation = Path.Combine(Directory.GetCurrentDirectory(), "Memories");
+        var docLocation = Path.Combine(config.MemoryFolderBasePath, "Memories");
         var tasks = Directory
             .GetFiles(docLocation)
             .Select(f => new FileInfo(f))
@@ -63,8 +64,6 @@ public class MemoryKernel : KernelBase
     //
     //     return Task.FromResult(plugins);
     // }
-
-    public override string ScreenPrompt => "What do you want to know about time?";
 
     protected override async Task<string?> HandlePrompt(Kernel kernel, string userPrompt)
     {
@@ -89,23 +88,12 @@ public class MemoryKernel : KernelBase
 
         _chatHistory.AddUserMessage(userPrompt);
 
-        var stream = completionService.GetStreamingChatMessageContentsAsync(_chatHistory, executionSettings: settings, kernel: kernel);
-
-        var message = new StringBuilder();
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
-        await foreach (var content in stream)
+        var result = await completionService.GetChatMessageContentAsync(_chatHistory, executionSettings: settings, kernel: kernel);
+        if (result.Content != null)
         {
-            message.Append(content.Content);
-            Console.Write(content.Content);
+            _chatHistory.AddAssistantMessage(result.Content);
         }
 
-        Console.ForegroundColor = ConsoleColor.Gray;
-
-        if (message.Length > 0)
-        {
-            _chatHistory.AddAssistantMessage(message.ToString());
-        }
-
-        return null;
+        return result.Content;
     }
 }

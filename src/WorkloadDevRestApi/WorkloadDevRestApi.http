@@ -1,0 +1,6 @@
+@WorkloadDevRestApi_HostAddress = http://localhost:5065
+
+GET {{WorkloadDevRestApi_HostAddress}}/WorkloadDevBot/
+Accept: application/json
+
+###

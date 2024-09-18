@@ -2,7 +2,6 @@
 using Dumpify;
 using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
-using System.Drawing;
 
 namespace Demo;
 
@@ -28,32 +27,11 @@ public abstract class KernelBase : IDemo
         _plugins = (await CreatePluginsAsync(_kernel!)).ToDictionary(p => p.Name);
     }
 
-    public async Task RunAsync(SKConfig config)
+    public async Task<string> RunAsync(SKConfig config, string query)
     {
-        while (true)
-        {
-            ScreenPrompt.Dump(colors: new ColorConfig { PropertyValueColor = Color.Aqua });
-            var query = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(query))
-            {
-                continue;
-            }
-
-            var result = await HandlePrompt(_kernel!, query);
-
-            if (result is null)
-            {
-                Console.WriteLine();
-            }
-            else
-            {
-                result.Dump();
-            }
-        }
+        var result = await HandlePrompt(_kernel!, query);
+        return result;
     }
-
-    public virtual string ScreenPrompt => "How can I help you?";
 
     public abstract Kernel CreateKernel(SKConfig config);
     protected abstract Task<string?> HandlePrompt(Kernel kernel, string userPrompt);
