@@ -75,24 +75,6 @@
 		<None Update="Memories\publish-workload-flow.md">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="Memories\publish-workload-requirements.md">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Memories\quickstart-sample.md">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Memories\supportability.md">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Memories\user-permissions.md">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Memories\workload-cloud-setup.md">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Memories\workload-environment.md">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
 		<None Update="Prompts\order\config.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
