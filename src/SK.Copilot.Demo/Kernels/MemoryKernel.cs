@@ -39,19 +39,19 @@ public class MemoryKernel : KernelBase
             .WithAzureOpenAITextEmbeddingGeneration(new AzureOpenAIConfig { APIKey = config.AzureOpenAIKey, Endpoint = config.AzureOpenAIEndpoint, Deployment = config.AzureOpenAIEmbeddingDeploymentName, Auth = AzureOpenAIConfig.AuthTypes.APIKey }, new GPT4oTokenizer())
             .Build();
 
-        //This will upload all files to Azure Search Service and local memory
+        // NOTE: This will upload all files to Azure Search Service and local memory
         //Comment if data is already uploaded
-        var docLocation = Path.Combine(config.MemoryFolderBasePath, "Memories");
-        var tasks = Directory
-            .GetFiles(docLocation)
-            .Select(f => new FileInfo(f))
-            .Select(async fileInfo =>
-            {
-                await Memory.DeleteDocumentAsync(fileInfo.Name);
-                return await Memory.ImportDocumentAsync(fileInfo.FullName, documentId: fileInfo.Name);
-            });
+        //var docLocation = Path.Combine(config.MemoryFolderBasePath, "Memories");
+        //var tasks = Directory
+        //    .GetFiles(docLocation)
+        //    .Select(f => new FileInfo(f))
+        //    .Select(async fileInfo =>
+        //    {
+        //        await Memory.DeleteDocumentAsync(fileInfo.Name);
+        //        return await Memory.ImportDocumentAsync(fileInfo.FullName, documentId: fileInfo.Name);
+        //    });
 
-        await Task.WhenAll(tasks);
+        //await Task.WhenAll(tasks);
 
         return Memory;
     }
